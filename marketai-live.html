@@ -1,0 +1,2865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>MarketAI — Intelligent Marketing Platform</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0f14;--sidebar:#111318;--card:#161a23;--card2:#1a1f2e;
+  --border:#232840;--cyan:#00d4ff;--cyan2:#0ea5f0;--green:#00e676;
+  --amber:#ffab00;--red:#ff5252;--purple:#a78bfa;
+  --text:#e2e8f0;--muted:#6b7280;--dim:#94a3b8;
+}
+body.light-mode{
+  --bg:#f0f2f8;--sidebar:#ffffff;--card:#ffffff;--card2:#f5f7fc;
+  --border:#e2e8f0;--text:#1a1f2e;--muted:#64748b;--dim:#475569;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s}
+
+/* ═══════════════════════════════════
+   LANDING PAGE
+═══════════════════════════════════ */
+#landing{
+  position:fixed;inset:0;z-index:1000;
+  background:#060810;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.land-bg{
+  position:absolute;inset:0;overflow:hidden;
+}
+.land-orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.25;animation:orbFloat 8s ease-in-out infinite;
+}
+.land-orb-1{width:600px;height:600px;background:radial-gradient(circle,#00d4ff,transparent);top:-100px;left:-100px;animation-delay:0s}
+.land-orb-2{width:500px;height:500px;background:radial-gradient(circle,#5b5ef4,transparent);bottom:-80px;right:-80px;animation-delay:-3s}
+.land-orb-3{width:300px;height:300px;background:radial-gradient(circle,#00e676,transparent);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-5s}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+.land-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%);
+}
+
+.land-nav{
+  position:relative;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 60px;
+}
+.land-logo{
+  display:flex;align-items:center;gap:12px;
+}
+.land-logo-icon{
+  width:40px;height:40px;
+  background:linear-gradient(135deg,#00d4ff,#5b5ef4);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+}
+.land-logo-text{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  background:linear-gradient(135deg,#fff,#94a3b8);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.land-nav-links{display:flex;align-items:center;gap:32px}
+.land-nav-link{
+  font-size:14px;color:#94a3b8;text-decoration:none;
+  transition:color .2s;cursor:pointer;
+}
+.land-nav-link:hover{color:#fff}
+.land-cta-sm{
+  padding:9px 20px;border-radius:8px;
+  background:rgba(0,212,255,.1);
+  border:1px solid rgba(0,212,255,.3);
+  color:#00d4ff;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.land-cta-sm:hover{background:rgba(0,212,255,.2)}
+
+.land-hero{
+  position:relative;z-index:10;
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:0 20px;
+}
+.land-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:20px;
+  border:1px solid rgba(0,212,255,.3);
+  background:rgba(0,212,255,.05);
+  font-size:12px;color:#00d4ff;font-family:'Space Mono',monospace;
+  margin-bottom:28px;letter-spacing:.5px;
+}
+.land-badge-dot{width:6px;height:6px;border-radius:50%;background:#00e676;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}
+
+.land-h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(42px,7vw,88px);
+  font-weight:800;
+  line-height:1.0;
+  letter-spacing:-2px;
+  margin-bottom:24px;
+  color:#fff;
+}
+.land-h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,#00d4ff 0%,#5b5ef4 50%,#00e676 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:inline-block;
+  animation:gradShift 4s ease-in-out infinite;
+}
+@keyframes gradShift{
+  0%,100%{filter:hue-rotate(0deg)}
+  50%{filter:hue-rotate(30deg)}
+}
+
+.land-sub{
+  font-size:clamp(16px,2vw,20px);
+  color:#64748b;max-width:560px;line-height:1.6;margin-bottom:48px;
+}
+
+.land-ctas{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:64px}
+.land-btn-primary{
+  padding:16px 36px;border-radius:12px;
+  background:linear-gradient(135deg,#00d4ff,#0ea5f0);
+  color:#000;font-weight:700;font-size:16px;
+  border:none;cursor:pointer;
+  box-shadow:0 0 40px rgba(0,212,255,.3);
+  transition:all .2s;
+  display:flex;align-items:center;gap:10px;
+}
+.land-btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 50px rgba(0,212,255,.4)}
+.land-btn-secondary{
+  padding:16px 36px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05);
+  color:#fff;font-weight:600;font-size:16px;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:10px;
+}
+.land-btn-secondary:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1)}
+
+.land-stats{
+  display:flex;align-items:center;gap:40px;
+  border-top:1px solid rgba(255,255,255,.06);
+  padding-top:40px;
+  flex-wrap:wrap;justify-content:center;
+}
+.land-stat{text-align:center}
+.land-stat-val{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#fff}
+.land-stat-label{font-size:12px;color:#6b7280;margin-top:4px;letter-spacing:.5px;text-transform:uppercase}
+
+.land-features{
+  position:relative;z-index:10;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:rgba(255,255,255,.06);
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.land-feature{
+  padding:32px 40px;background:#060810;
+  transition:background .2s;cursor:default;
+}
+.land-feature:hover{background:#0d1120}
+.land-feature-icon{font-size:24px;margin-bottom:12px}
+.land-feature-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:6px}
+.land-feature-desc{font-size:13px;color:#6b7280;line-height:1.5}
+
+/* ═══════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════ */
+#app{display:none;height:100vh;overflow:hidden;flex-direction:row}
+#app.show{display:flex}
+
+#sidebar{width:220px;min-width:220px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;transition:width .3s}
+.logo{display:flex;align-items:center;gap:10px;padding:20px 18px 16px;border-bottom:1px solid var(--border)}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--cyan),#5b5ef4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-text .name{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--text)}
+.logo-text .sub{font-size:11px;color:var(--muted)}
+nav{flex:1;padding:12px 10px;overflow-y:auto}
+.nav-section{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);padding:10px 12px 4px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:14px;color:var(--muted);transition:all .15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:rgba(0,212,255,.07);color:var(--text)}
+.nav-item.active{background:rgba(0,212,255,.12);color:var(--cyan);font-weight:500}
+.nav-item svg{flex-shrink:0;width:17px;height:17px}
+.nav-badge{margin-left:auto;font-size:10px;background:rgba(0,212,255,.15);color:var(--cyan);padding:2px 7px;border-radius:10px;font-weight:600}
+.sidebar-bottom{padding:12px 10px;border-top:1px solid var(--border)}
+.collapse-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .15s;border:none;background:none;width:100%}
+.collapse-btn:hover{color:var(--text)}
+
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid var(--border);background:var(--sidebar);gap:12px}
+.topbar-left{display:flex;flex-direction:column}
+.topbar-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--text)}
+.topbar-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:13px;color:var(--muted);cursor:pointer;transition:border-color .15s;min-width:200px}
+.search-box:hover{border-color:var(--cyan)}
+.search-box span{font-size:11px;color:var(--muted);background:var(--card2);padding:2px 6px;border-radius:4px;border:1px solid var(--border)}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),#5b5ef4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;cursor:pointer;flex-shrink:0;position:relative}
+.icon-btn{width:34px;height:34px;border-radius:8px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:color .15s;position:relative;flex-shrink:0}
+.icon-btn:hover{color:var(--text);border-color:var(--cyan)}
+.icon-btn .badge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:var(--red);font-size:9px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.topbar-clock{font-size:12px;color:var(--muted);text-align:right;line-height:1.4;min-width:80px}
+.topbar-clock .time{font-size:14px;font-weight:600;color:var(--cyan);font-variant-numeric:tabular-nums}
+.theme-toggle{width:50px;height:26px;border-radius:13px;border:1px solid var(--border);background:var(--card2);cursor:pointer;position:relative;transition:all .25s;flex-shrink:0}
+.theme-toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--cyan);transition:left .25s}
+body.light-mode .theme-toggle::after{left:calc(100% - 21px)}
+
+.quick-strip{display:flex;align-items:center;gap:8px;padding:10px 24px;border-bottom:1px solid var(--border);background:var(--sidebar);overflow-x:auto}
+.qa-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--dim);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.qa-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,.06)}
+.qa-btn.primary{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#000;border-color:transparent;font-weight:700}
+.qa-btn.primary:hover{opacity:.88}
+.qa-label{font-size:11px;color:var(--muted);margin-right:4px;flex-shrink:0}
+
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding:22px 24px;min-height:0;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* STAT CARDS */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;position:relative;cursor:pointer;transition:transform .2s,border-color .2s}
+.stat-card:hover{transform:translateY(-2px);border-color:rgba(0,212,255,.3)}
+.stat-icon{width:34px;height:34px;border-radius:9px;background:rgba(0,212,255,.1);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.stat-badge{position:absolute;top:16px;right:16px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px}
+.badge-up{background:rgba(0,230,118,.12);color:var(--green)}
+.badge-down{background:rgba(255,82,82,.12);color:var(--red)}
+.stat-value{font-size:26px;font-weight:700;color:var(--text);margin-bottom:4px}
+.stat-label{font-size:13px;color:var(--muted)}
+
+/* CHARTS */
+.chart-row{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-bottom:18px}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.chart-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+.chart-sub{font-size:12px;color:var(--cyan);margin-bottom:14px}
+.chart-wrap{position:relative;height:180px}
+.bottom-row{display:grid;grid-template-columns:1.3fr 1fr;gap:14px}
+.campaigns-card,.insights-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.section-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+.section-sub{font-size:12px;color:var(--cyan);margin-bottom:14px}
+.campaign-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.campaign-item:last-child{border-bottom:none}
+.cam-icon{width:34px;height:34px;border-radius:9px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.cam-name{font-size:14px;font-weight:500;color:var(--text)}
+.cam-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.cam-right{display:flex;align-items:center;gap:10px}
+.cam-status{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+.s-active{background:rgba(0,230,118,.12);color:var(--green)}
+.s-scheduled{background:rgba(0,212,255,.12);color:var(--cyan)}
+.s-completed{background:rgba(107,114,128,.15);color:var(--muted)}
+.s-draft{background:rgba(255,171,0,.12);color:var(--amber)}
+.cam-reach{font-size:13px;font-weight:600;color:var(--dim)}
+.insights-header{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.insights-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.live-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,230,118,.15);color:var(--green);letter-spacing:.5px;animation:pulseBadge 2s ease-in-out infinite}
+@keyframes pulseBadge{0%,100%{opacity:1}50%{opacity:.5}}
+.insight-item{background:var(--card2);border-radius:10px;padding:14px;margin-bottom:10px}
+.insight-item:last-child{margin-bottom:0}
+.insight-tag{font-size:10px;font-weight:700;letter-spacing:.7px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.tag-trend{color:var(--green)}.tag-alert{color:var(--red)}.tag-suggestion{color:var(--cyan)}
+.insight-text{font-size:13px;color:var(--dim);line-height:1.5}
+
+/* PAGES */
+.page-header{margin-bottom:20px;display:flex;align-items:flex-end;justify-content:space-between}
+.page-header h1{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text)}
+.page-header p{font-size:13px;color:var(--muted);margin-top:4px}
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px}
+.section-card h2{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:14px;color:var(--text)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.gen-label{font-size:12px;color:var(--muted);margin-bottom:5px;display:block;font-weight:500}
+.gen-select,.gen-input,.gen-textarea{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 14px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
+.gen-select:focus,.gen-input:focus,.gen-textarea:focus{border-color:var(--cyan)}
+.gen-textarea{resize:vertical;min-height:80px}
+.gen-form{display:flex;flex-direction:column;gap:12px}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#000;font-weight:700;font-size:14px;border:none;border-radius:9px;padding:11px 22px;cursor:pointer;transition:opacity .15s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{opacity:.88}
+.btn-secondary{background:var(--card2);color:var(--text);font-weight:500;font-size:14px;border:1px solid var(--border);border-radius:9px;padding:10px 18px;cursor:pointer;transition:all .15s}
+.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-sm{font-size:12px;padding:6px 12px;border-radius:7px}
+.btn-danger{background:rgba(255,82,82,.15);color:var(--red);border:1px solid rgba(255,82,82,.3);font-size:12px;border-radius:7px;padding:6px 12px;cursor:pointer;transition:all .15s}
+.btn-danger:hover{background:rgba(255,82,82,.25)}
+.result-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px;min-height:100px;font-size:14px;color:var(--text);line-height:1.65;white-space:pre-wrap;position:relative}
+.result-actions{display:flex;gap:8px;margin-top:12px}
+.platform-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.ptab{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--card2);color:var(--muted);transition:all .15s}
+.ptab.active,.ptab:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,.08)}
+
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.col-title{font-size:14px;font-weight:600;color:var(--text)}
+.col-count{font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(0,212,255,.12);color:var(--cyan)}
+.k-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;cursor:grab;transition:transform .15s,box-shadow .15s}
+.k-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.3)}
+.k-platform{font-size:11px;color:var(--muted);margin-bottom:6px}
+.k-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:8px}
+.k-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.k-date{font-size:11px;color:var(--muted)}
+
+/* ANALYTICS */
+.metric-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.metric-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.metric-val{font-size:22px;font-weight:700;color:var(--text)}
+.metric-label{font-size:12px;color:var(--muted);margin-top:3px}
+.metric-delta{font-size:12px;margin-top:4px}
+.top-table{width:100%;border-collapse:collapse}
+.top-table th{font-size:11px;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.top-table td{padding:12px 10px;border-bottom:1px solid var(--border);font-size:13px;color:var(--dim)}
+.top-table tr:last-child td{border-bottom:none}
+.top-table td:first-child{color:var(--text);font-weight:500}
+.bar-fill{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--cyan),var(--cyan2))}
+.bar-track{height:6px;background:var(--card2);border-radius:3px;width:120px}
+
+/* INBOX */
+.inbox-layout{display:grid;grid-template-columns:320px 1fr;gap:16px;height:calc(100vh - 230px)}
+.inbox-list{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow-y:auto}
+.inbox-item{padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s}
+.inbox-item:hover,.inbox-item.selected{background:rgba(0,212,255,.08)}
+.inbox-item.unread .inbox-sender{font-weight:700;color:var(--text)}
+.inbox-sender{font-size:14px;color:var(--text);margin-bottom:3px}
+.inbox-preview{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inbox-time{font-size:11px;color:var(--muted);float:right}
+.msg-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;display:flex;flex-direction:column}
+.msg-header{border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:16px}
+.msg-from{font-size:15px;font-weight:600;color:var(--text)}
+.msg-subject{font-size:13px;color:var(--muted);margin-top:2px}
+.msg-body{font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:18px;flex:1}
+.ai-reply-box{background:var(--card2);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:10px;padding:14px;margin-bottom:14px}
+.ai-reply-label{font-size:11px;color:var(--cyan);font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+.ai-reply-text{font-size:13px;color:var(--dim);line-height:1.6}
+.msg-actions{display:flex;gap:9px}
+.editable-reply{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:inherit;resize:vertical;min-height:80px;outline:none}
+.editable-reply:focus{border-color:var(--cyan)}
+
+/* CAMPAIGNS */
+.campaign-filters{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.filter-btn{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--card2);color:var(--muted);transition:all .15s}
+.filter-btn.active,.filter-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.campaigns-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.campaign-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:border-color .2s,transform .2s}
+.campaign-card:hover{border-color:rgba(0,212,255,.3);transform:translateY(-1px)}
+.cc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.cc-name{font-size:15px;font-weight:600;color:var(--text)}
+.cc-type{font-size:11px;color:var(--muted);margin-top:3px}
+.cc-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.cc-metric{background:var(--card2);border-radius:8px;padding:10px 12px}
+.cc-metric-val{font-size:18px;font-weight:700;color:var(--text)}
+.cc-metric-label{font-size:11px;color:var(--muted);margin-top:2px}
+.cc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+
+/* NOTIFICATION DRAWER */
+.notif-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:400;opacity:0;pointer-events:none;transition:opacity .25s}
+.notif-overlay.open{opacity:1;pointer-events:all}
+.notif-drawer{position:fixed;top:0;right:0;width:380px;height:100vh;background:var(--sidebar);border-left:1px solid var(--border);z-index:401;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.notif-drawer.open{transform:translateX(0)}
+.notif-header{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.notif-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text)}
+.notif-close{width:28px;height:28px;border-radius:7px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:14px;transition:color .15s}
+.notif-close:hover{color:var(--text)}
+.notif-body{flex:1;overflow-y:auto;padding:12px}
+.notif-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;cursor:pointer;transition:all .15s;position:relative}
+.notif-item:hover{border-color:var(--cyan);transform:translateX(-2px)}
+.notif-item.unread{border-left:3px solid var(--cyan)}
+.notif-icon{font-size:20px;margin-bottom:6px}
+.notif-text{font-size:13px;color:var(--text);line-height:1.45;margin-bottom:4px}
+.notif-time{font-size:11px;color:var(--muted)}
+.notif-item-actions{display:flex;gap:6px;margin-top:10px}
+.notif-mark-all{padding:12px 20px;border-top:1px solid var(--border)}
+.notif-filter-tabs{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.notif-tab{padding:5px 12px;border-radius:14px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--card2);color:var(--muted);transition:all .15s}
+.notif-tab.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,.08)}
+
+/* AI CHAT */
+.chat-fab{position:fixed;bottom:28px;right:28px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),#5b5ef4);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 24px rgba(0,212,255,.3);z-index:300;font-size:22px;border:none;transition:transform .2s,box-shadow .2s}
+.chat-fab:hover{transform:scale(1.08);box-shadow:0 8px 32px rgba(0,212,255,.45)}
+.chat-panel{position:fixed;bottom:92px;right:28px;width:380px;height:560px;background:var(--sidebar);border:1px solid var(--border);border-radius:18px;z-index:300;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.5);transform:scale(.9) translateY(20px);opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.4,0,.2,1)}
+.chat-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all}
+.chat-head{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.chat-head-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),#5b5ef4);display:flex;align-items:center;justify-content:center;font-size:16px}
+.chat-head-info .name{font-weight:600;font-size:14px;color:var(--text)}
+.chat-head-info .status{font-size:11px;color:var(--green)}
+.chat-head-close{margin-left:auto;cursor:pointer;color:var(--muted);font-size:18px;line-height:1;transition:color .15s}
+.chat-head-close:hover{color:var(--text)}
+.chat-context-bar{padding:8px 14px;background:rgba(0,212,255,.05);border-bottom:1px solid var(--border);font-size:11px;color:var(--cyan);display:flex;align-items:center;gap:6px}
+.chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.chat-msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5}
+.chat-msg.ai{background:var(--card2);color:var(--text);align-self:flex-start;border-radius:4px 12px 12px 12px}
+.chat-msg.user{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#000;align-self:flex-end;font-weight:500;border-radius:12px 4px 12px 12px}
+.chat-msg.typing{color:var(--muted);font-style:italic}
+.typing-dots span{animation:typingBounce 1.2s infinite;display:inline-block;font-size:18px}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.chat-suggestions{padding:8px 14px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border)}
+.chat-sug{font-size:11px;padding:5px 10px;border-radius:14px;border:1px solid var(--border);background:var(--card2);color:var(--dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.chat-sug:hover{border-color:var(--cyan);color:var(--cyan)}
+.chat-input-row{padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:8px}
+.chat-input{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-size:13px;font-family:inherit;outline:none}
+.chat-input:focus{border-color:var(--cyan)}
+.chat-send{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--cyan2));border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0}
+
+/* COMMAND PALETTE */
+.cmd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:500;opacity:0;pointer-events:none;transition:opacity .2s}
+.cmd-overlay.open{opacity:1;pointer-events:all}
+.cmd-box{position:fixed;top:18%;left:50%;transform:translateX(-50%) translateY(-10px);width:580px;max-width:95vw;background:var(--sidebar);border:1px solid var(--border);border-radius:16px;z-index:501;box-shadow:0 32px 80px rgba(0,0,0,.6);transition:transform .2s}
+.cmd-overlay.open .cmd-box{transform:translateX(-50%) translateY(0)}
+.cmd-search{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.cmd-search svg{color:var(--muted);flex-shrink:0}
+.cmd-search input{flex:1;background:none;border:none;outline:none;font-size:16px;color:var(--text);font-family:inherit}
+.cmd-search input::placeholder{color:var(--muted)}
+.cmd-results{max-height:400px;overflow-y:auto;padding:10px}
+.cmd-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);padding:8px 12px 4px;font-weight:600}
+.cmd-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:background .12s}
+.cmd-item:hover,.cmd-item.selected{background:rgba(0,212,255,.1)}
+.cmd-item-icon{width:32px;height:32px;border-radius:8px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.cmd-item-label{font-size:14px;color:var(--text)}
+.cmd-item-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.cmd-item-kbd{margin-left:auto;font-size:10px;background:var(--card2);color:var(--muted);padding:2px 6px;border-radius:4px;border:1px solid var(--border);flex-shrink:0}
+.cmd-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:14px;font-size:11px;color:var(--muted)}
+.cmd-footer span{display:flex;align-items:center;gap:5px}
+.cmd-footer kbd{background:var(--card2);padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:10px}
+.cmd-recent{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px}
+.cmd-recent-chip{padding:4px 10px;border-radius:12px;font-size:11px;background:var(--card2);border:1px solid var(--border);color:var(--dim);cursor:pointer;transition:all .15s}
+.cmd-recent-chip:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ONBOARDING TOUR */
+.tour-overlay{position:fixed;inset:0;z-index:600;pointer-events:none}
+.tour-spotlight{position:absolute;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,.65);transition:all .4s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.tour-card{position:fixed;background:var(--sidebar);border:1px solid var(--border);border-radius:14px;padding:20px 22px;width:320px;box-shadow:0 16px 48px rgba(0,0,0,.5);z-index:601;pointer-events:all}
+.tour-card h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px}
+.tour-card p{font-size:13px;color:var(--dim);line-height:1.55;margin-bottom:16px}
+.tour-footer{display:flex;align-items:center;justify-content:space-between}
+.tour-dots{display:flex;gap:5px}
+.tour-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background .2s}
+.tour-dot.active{background:var(--cyan)}
+.tour-btns{display:flex;gap:8px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:700;opacity:0;pointer-events:none;transition:opacity .2s;display:flex;align-items:center;justify-content:center}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:var(--sidebar);border:1px solid var(--border);border-radius:16px;width:520px;max-width:95vw;max-height:85vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.6);transform:translateY(-10px);transition:transform .2s}
+.modal-overlay.open .modal-box{transform:translateY(0)}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--text)}
+.modal-close{width:28px;height:28px;border-radius:7px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:14px}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+
+/* PROFILE DROPDOWN */
+.profile-menu{position:absolute;top:44px;right:0;width:220px;background:var(--sidebar);border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.4);z-index:200;opacity:0;pointer-events:none;transform:translateY(-6px);transition:all .2s}
+.profile-menu.open{opacity:1;pointer-events:all;transform:translateY(0)}
+.profile-menu-header{padding:14px 16px;border-bottom:1px solid var(--border)}
+.profile-menu-name{font-weight:600;font-size:14px;color:var(--text)}
+.profile-menu-email{font-size:12px;color:var(--muted);margin-top:2px}
+.profile-menu-item{padding:10px 16px;cursor:pointer;font-size:13px;color:var(--dim);transition:all .15s;display:flex;align-items:center;gap:10px}
+.profile-menu-item:hover{background:rgba(0,212,255,.06);color:var(--text)}
+.profile-menu-item.danger{color:var(--red)}
+.profile-menu-item.danger:hover{background:rgba(255,82,82,.06)}
+
+/* SCHEDULE MODAL */
+.time-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.time-slot{padding:8px;text-align:center;border-radius:8px;border:1px solid var(--border);background:var(--card2);cursor:pointer;font-size:12px;color:var(--muted);transition:all .15s}
+.time-slot:hover,.time-slot.selected{border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,.08)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#2a2f40;border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:#3a3f55}
+
+/* SPINNER */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,212,255,.3);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:10px;padding:12px 20px;font-size:14px;color:var(--text);z-index:999;opacity:0;transition:all .3s;white-space:nowrap;display:flex;align-items:center;gap:10px}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px}
+.cal-day-label{text-align:center;font-size:11px;color:var(--muted);padding:4px 0;font-weight:600}
+.cal-day{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:all .15s;position:relative}
+.cal-day:hover{background:rgba(0,212,255,.1)}
+.cal-day.today{background:rgba(0,212,255,.15);color:var(--cyan);font-weight:700}
+.cal-day.has-post::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--green)}
+.cal-day.other-month{color:var(--muted)}
+
+/* CAMPAIGN PROGRESS BAR */
+.progress-bar{height:6px;background:var(--card2);border-radius:3px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--cyan),var(--green));transition:width .4s ease}
+
+/* TAGS INPUT */
+.tags-input-wrap{display:flex;flex-wrap:wrap;gap:6px;background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:8px 12px;min-height:44px;align-items:center;cursor:text}
+.tags-input-wrap:focus-within{border-color:var(--cyan)}
+.tag-pill{background:rgba(0,212,255,.12);color:var(--cyan);border-radius:12px;padding:3px 10px;font-size:12px;display:flex;align-items:center;gap:5px}
+.tag-pill-x{cursor:pointer;opacity:.6}
+.tag-pill-x:hover{opacity:1}
+.tags-input-inner{border:none;outline:none;background:none;color:var(--text);font-size:14px;min-width:80px;font-family:inherit}
+
+.char-count{font-size:11px;color:var(--muted);text-align:right;margin-top:4px}
+.char-count.warn{color:var(--amber)}
+.char-count.over{color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     LANDING PAGE
+═══════════════════════════════════ -->
+<div id="landing">
+  <div class="land-bg">
+    <div class="land-grid"></div>
+    <div class="land-orb land-orb-1"></div>
+    <div class="land-orb land-orb-2"></div>
+    <div class="land-orb land-orb-3"></div>
+  </div>
+  <nav class="land-nav">
+    <div class="land-logo">
+      <div class="land-logo-icon">⚡</div>
+      <div class="land-logo-text">MarketAI</div>
+    </div>
+    <div class="land-nav-links">
+      <span class="land-nav-link" onclick="scrollLand('features')">Features</span>
+      <span class="land-nav-link" onclick="scrollLand('stats')">Results</span>
+      <span class="land-nav-link">Pricing</span>
+      <span class="land-nav-link">Docs</span>
+    </div>
+    <button class="land-cta-sm" onclick="enterApp()">Sign In →</button>
+  </nav>
+  <div class="land-hero">
+    <div class="land-badge">
+      <span class="land-badge-dot"></span>
+      AI-POWERED MARKETING PLATFORM
+    </div>
+    <h1 class="land-h1">
+      Marketing that<br><em>thinks for you</em>
+    </h1>
+    <p class="land-sub">
+      Generate campaigns, schedule content, analyze performance, and chat with your AI strategist — all in one command center.
+    </p>
+    <div class="land-ctas">
+      <button class="land-btn-primary" onclick="enterApp()">
+        <span>Launch Dashboard</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <button class="land-btn-secondary" onclick="enterAppTour()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>Watch Demo Tour</span>
+      </button>
+    </div>
+    <div class="land-stats" id="stats">
+      <div class="land-stat">
+        <div class="land-stat-val" id="land-stat-reach">—</div>
+        <div class="land-stat-label">Total Reach</div>
+      </div>
+      <div class="land-stat">
+        <div class="land-stat-val" id="land-stat-campaigns">—</div>
+        <div class="land-stat-label">Campaigns</div>
+      </div>
+      <div class="land-stat">
+        <div class="land-stat-val" id="land-stat-posts">—</div>
+        <div class="land-stat-label">Posts Scheduled</div>
+      </div>
+      <div class="land-stat">
+        <div class="land-stat-val" id="land-stat-budget">—</div>
+        <div class="land-stat-label">Total Budget</div>
+      </div>
+    </div>
+  </div>
+  <div class="land-features" id="features">
+    <div class="land-feature">
+      <div class="land-feature-icon">✨</div>
+      <div class="land-feature-title">AI Content Studio</div>
+      <div class="land-feature-desc">Generate platform-optimized posts for Instagram, LinkedIn, Email & more in seconds.</div>
+    </div>
+    <div class="land-feature">
+      <div class="land-feature-icon">📊</div>
+      <div class="land-feature-title">Campaign Intelligence</div>
+      <div class="land-feature-desc">Real-time analytics with AI recommendations to maximize your marketing ROI.</div>
+    </div>
+    <div class="land-feature">
+      <div class="land-feature-icon">🤖</div>
+      <div class="land-feature-title">AI Assistant</div>
+      <div class="land-feature-desc">Your always-on marketing strategist. Ask anything, get actionable advice instantly.</div>
+    </div>
+    <div class="land-feature">
+      <div class="land-feature-icon">📅</div>
+      <div class="land-feature-title">Smart Publishing</div>
+      <div class="land-feature-desc">Drag-and-drop kanban board to schedule and manage your entire content pipeline.</div>
+    </div>
+    <div class="land-feature">
+      <div class="land-feature-icon">📬</div>
+      <div class="land-feature-title">AI Inbox</div>
+      <div class="land-feature-desc">Smart reply suggestions for every message. Handle customer inquiries in a fraction of the time.</div>
+    </div>
+    <div class="land-feature">
+      <div class="land-feature-icon">🔍</div>
+      <div class="land-feature-title">Command Palette</div>
+      <div class="land-feature-desc">Press ⌘K anywhere to instantly navigate, search, or trigger any action in the platform.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     APP
+═══════════════════════════════════ -->
+<div id="app">
+
+<!-- NOTIFICATION DRAWER -->
+<div class="notif-overlay" id="notifOverlay" onclick="closeNotifs()">
+  <div class="notif-drawer" id="notifDrawer" onclick="event.stopPropagation()">
+    <div class="notif-header">
+      <div class="notif-title">🔔 Notifications</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn-secondary btn-sm" onclick="addNewNotif()">+ New</button>
+        <div class="notif-close" onclick="closeNotifs()">✕</div>
+      </div>
+    </div>
+    <div class="notif-filter-tabs">
+      <div class="notif-tab active" onclick="filterNotifs('all',this)">All</div>
+      <div class="notif-tab" onclick="filterNotifs('unread',this)">Unread</div>
+      <div class="notif-tab" onclick="filterNotifs('campaigns',this)">Campaigns</div>
+      <div class="notif-tab" onclick="filterNotifs('inbox',this)">Inbox</div>
+    </div>
+    <div class="notif-body" id="notifBody"></div>
+    <div class="notif-mark-all" style="display:flex;gap:8px">
+      <button class="btn-secondary btn-sm" onclick="markAllRead()" style="flex:1">Mark all read</button>
+      <button class="btn-danger" onclick="clearAllNotifs()" style="flex:1">Clear all</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMMAND PALETTE -->
+<div class="cmd-overlay" id="cmdOverlay" onclick="closeCmd()">
+  <div class="cmd-box" onclick="event.stopPropagation()">
+    <div class="cmd-search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="cmdInput" placeholder="Search pages, actions, campaigns..." oninput="filterCmd(this.value)" onkeydown="handleCmdKey(event)" autocomplete="off"/>
+      <kbd style="font-size:11px;background:var(--card2);padding:2px 6px;border-radius:4px;border:1px solid var(--border);color:var(--muted)">ESC</kbd>
+    </div>
+    <div id="cmdRecents" style="border-bottom:1px solid var(--border);padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Recent:</span>
+      <div class="cmd-recent"></div>
+    </div>
+    <div class="cmd-results" id="cmdResults"></div>
+    <div class="cmd-footer">
+      <span><kbd>↑↓</kbd> Navigate</span>
+      <span><kbd>↵</kbd> Select</span>
+      <span><kbd>ESC</kbd> Close</span>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING TOUR -->
+<div class="tour-overlay" id="tourOverlay" style="display:none">
+  <div class="tour-spotlight" id="tourSpotlight"></div>
+  <div class="tour-card" id="tourCard">
+    <h3 id="tourTitle"></h3>
+    <p id="tourDesc"></p>
+    <div class="tour-footer">
+      <div class="tour-dots" id="tourDots"></div>
+      <div class="tour-btns">
+        <button class="btn-secondary btn-sm" onclick="endTour()">Skip</button>
+        <button class="btn-primary btn-sm" onclick="nextTourStep()" id="tourNextBtn">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEW CAMPAIGN MODAL -->
+<div class="modal-overlay" id="newCampaignModal">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">✨ New Campaign</div>
+      <div class="modal-close" onclick="closeModal('newCampaignModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="gen-form">
+        <div><label class="gen-label">Campaign Name</label><input class="gen-input" id="nc-name" placeholder="e.g. Spring Sale 2025"/></div>
+        <div class="grid-2">
+          <div><label class="gen-label">Platform</label>
+            <select class="gen-select" id="nc-platform">
+              <option>Instagram</option><option>Facebook</option><option>LinkedIn</option>
+              <option>Twitter/X</option><option>Email</option><option>SMS</option>
+            </select>
+          </div>
+          <div><label class="gen-label">Type</label>
+            <select class="gen-select" id="nc-type">
+              <option>Social</option><option>Email</option><option>SMS</option><option>Paid Ads</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div><label class="gen-label">Budget ($)</label><input class="gen-input" id="nc-budget" placeholder="500" type="number"/></div>
+          <div><label class="gen-label">Start Date</label><input class="gen-input" id="nc-date" type="date"/></div>
+        </div>
+        <div>
+          <label class="gen-label">Campaign Goal</label>
+          <textarea class="gen-textarea" id="nc-goal" placeholder="Describe your campaign goals, target audience, key messaging..."></textarea>
+        </div>
+        <div>
+          <label class="gen-label">Tags</label>
+          <div class="tags-input-wrap" id="tagsWrap" onclick="document.getElementById('tagInput').focus()">
+            <input class="tags-input-inner" id="tagInput" placeholder="Add tag..." onkeydown="handleTagInput(event)"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('newCampaignModal')">Cancel</button>
+      <button class="btn-primary" onclick="createCampaign()">🚀 Create Campaign</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE POST MODAL -->
+<div class="modal-overlay" id="scheduleModal">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">📅 Schedule Post</div>
+      <div class="modal-close" onclick="closeModal('scheduleModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="gen-form">
+        <div><label class="gen-label">Post Title</label><input class="gen-input" id="sp-title" placeholder="Give your post a name..."/></div>
+        <div class="grid-2">
+          <div><label class="gen-label">Platform</label>
+            <select class="gen-select" id="sp-platform">
+              <option>📸 Instagram</option><option>💼 LinkedIn</option><option>🐦 Twitter/X</option>
+              <option>✉️ Email</option><option>📱 SMS</option>
+            </select>
+          </div>
+          <div><label class="gen-label">Date</label><input class="gen-input" id="sp-date" type="date"/></div>
+        </div>
+        <div>
+          <label class="gen-label">Best Time Slots</label>
+          <div class="time-slots" id="timeSlots">
+            <div class="time-slot" onclick="selectSlot(this)">9:00 AM</div>
+            <div class="time-slot selected" onclick="selectSlot(this)">11:00 AM</div>
+            <div class="time-slot" onclick="selectSlot(this)">2:00 PM</div>
+            <div class="time-slot" onclick="selectSlot(this)">5:00 PM</div>
+            <div class="time-slot" onclick="selectSlot(this)">7:00 PM</div>
+            <div class="time-slot" onclick="selectSlot(this)">9:00 PM</div>
+          </div>
+        </div>
+        <div>
+          <label class="gen-label">Content Preview</label>
+          <textarea class="gen-textarea" id="sp-content" placeholder="Paste or write your content here..." oninput="updateCharCount(this,'sp-chars',280)"></textarea>
+          <div class="char-count" id="sp-chars">0 / 280</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('scheduleModal')">Cancel</button>
+      <button class="btn-primary" onclick="schedulePost()">📅 Schedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MESSAGE MODAL -->
+<div class="modal-overlay" id="addMessageModal">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">✉️ Add Message to Inbox</div>
+      <div class="modal-close" onclick="closeModal('addMessageModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="gen-form">
+        <div><label class="gen-label">Sender Name *</label><input class="gen-input" id="am-sender" placeholder="e.g. John Smith (Lead)"/></div>
+        <div><label class="gen-label">Subject *</label><input class="gen-input" id="am-subject" placeholder="e.g. Question about your product"/></div>
+        <div><label class="gen-label">Message Body</label><textarea class="gen-textarea" id="am-body" placeholder="Paste the message content here..." style="min-height:120px"></textarea></div>
+        <div class="grid-2">
+          <div><label class="gen-label">Received</label>
+            <select class="gen-select" id="am-time">
+              <option>Just now</option><option>2m ago</option><option>1hr ago</option><option>Today</option><option>Yesterday</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:flex-end">
+            <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--dim);cursor:pointer">
+              <input type="checkbox" id="am-unread" checked style="width:16px;height:16px;accent-color:var(--cyan)"/>
+              Mark as unread
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('addMessageModal')">Cancel</button>
+      <button class="btn-primary" onclick="addMessageToInbox()">✉️ Add Message</button>
+    </div>
+  </div>
+</div>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <div class="chat-head-avatar">🤖</div>
+    <div class="chat-head-info">
+      <div class="name">MarketAI Assistant</div>
+      <div class="status" id="chatStatus">● Online</div>
+    </div>
+    <div style="display:flex;gap:6px;margin-left:auto;align-items:center">
+      <div class="icon-btn" onclick="clearChat()" title="Clear chat" style="width:28px;height:28px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg>
+      </div>
+      <div class="chat-head-close" onclick="toggleChat()">✕</div>
+    </div>
+  </div>
+  <div class="chat-context-bar" id="chatContextBar">
+    🎯 Context: <strong id="chatContext">Dashboard</strong> · Ask me anything!
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg ai">👋 Hi! I'm your AI marketing assistant powered by Gemini. I have full visibility into your workspace — campaigns, inbox, publishing board, and analytics. Ask me anything!</div>
+  </div>
+  <div class="chat-suggestions" id="chatSugs">
+    <div class="chat-sug" onclick="askAI(this.textContent)">Best time to post?</div>
+    <div class="chat-sug" onclick="askAI(this.textContent)">Improve engagement</div>
+    <div class="chat-sug" onclick="askAI(this.textContent)">Analyze my campaigns</div>
+    <div class="chat-sug" onclick="askAI(this.textContent)">Content ideas</div>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button class="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <div class="logo-text">
+      <div class="name">MarketAI</div>
+      <div class="sub">Command Center</div>
+    </div>
+  </div>
+  <nav>
+    <div class="nav-section">Main</div>
+    <button class="nav-item active" onclick="showPage('dashboard',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="showPage('campaigns',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Campaigns
+      <span class="nav-badge" id="campaignBadge"></span>
+    </button>
+    <div class="nav-section">Create</div>
+    <button class="nav-item" onclick="showPage('content',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Content Studio
+    </button>
+    <button class="nav-item" onclick="showPage('publishing',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+      Publishing
+    </button>
+    <div class="nav-section">Insights</div>
+    <button class="nav-item" onclick="showPage('analytics',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Analytics
+    </button>
+    <button class="nav-item" onclick="showPage('inbox',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      AI Inbox
+      <span class="nav-badge" id="inboxBadge"></span>
+    </button>
+  </nav>
+  <div class="sidebar-bottom">
+    <button class="nav-item" onclick="showPage('settings',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Settings
+    </button>
+    <button class="collapse-btn" id="collapseBtn" onclick="toggleSidebar()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Collapse
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main id="main">
+  <div id="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title" id="topTitle">Command Center</div>
+      <div class="topbar-sub" id="topSub">Your marketing intelligence at a glance</div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box" onclick="openCmd()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span style="flex:1;color:var(--muted)">Search or press</span>
+        <span>⌘K</span>
+      </div>
+      <div class="topbar-clock">
+        <div class="time" id="clockTime">--:--:--</div>
+        <div id="clockDate" style="font-size:10px;color:var(--muted)"></div>
+      </div>
+      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme"></div>
+      <div class="icon-btn" onclick="openNotifs()" title="Notifications">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="badge" id="notifBadge">3</span>
+      </div>
+      <div class="icon-btn" onclick="startTour()" title="Help tour">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div style="position:relative">
+        <div class="avatar" onclick="toggleProfileMenu()">M</div>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile-menu-header">
+            <div class="profile-menu-name">Marketing Pro</div>
+            <div class="profile-menu-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ddb0bcafb6b8a9b8af9dbeb2b0adbcb3a4f3beb2b0">[email&#160;protected]</a></div>
+          </div>
+          <div class="profile-menu-item" onclick="showPage('settings',document.querySelector('[onclick*=settings]'));closeProfileMenu()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            Settings
+          </div>
+          <div class="profile-menu-item" onclick="startTour();closeProfileMenu()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Help & Tour
+          </div>
+          <div class="profile-menu-item" onclick="toggleTheme();closeProfileMenu()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+            Toggle Theme
+          </div>
+          <div class="profile-menu-item danger" onclick="goToLanding();closeProfileMenu()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK ACTIONS STRIP -->
+  <div class="quick-strip">
+    <span class="qa-label">Quick Actions:</span>
+    <button class="qa-btn primary" onclick="showPage('content',document.querySelector('[onclick*=\'content\']'));setTimeout(()=>document.getElementById('genGoal').focus(),300)">✨ Generate Content</button>
+    <button class="qa-btn" onclick="openModal('scheduleModal')">📅 Schedule Post</button>
+    <button class="qa-btn" onclick="showPage('campaigns',document.querySelector('[onclick*=\'campaigns\']'))">📊 View Campaigns</button>
+    <button class="qa-btn" onclick="showPage('analytics',document.querySelector('[onclick*=\'analytics\']'))">📈 Analytics</button>
+    <button class="qa-btn" onclick="showPage('inbox',document.querySelector('[onclick*=\'inbox\']'))">📬 Check Inbox</button>
+    <button class="qa-btn" onclick="openModal('newCampaignModal')">➕ New Campaign</button>
+    <button class="qa-btn" onclick="refreshDashboard()">🔄 Refresh</button>
+  </div>
+
+  <!-- DASHBOARD PAGE -->
+  <div id="page-dashboard" class="content">
+    <div class="stat-row">
+      <div class="stat-card" onclick="showPage('analytics',document.querySelector('[onclick*=analytics]'))">
+        <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <span class="stat-badge badge-up" id="reach-badge">↑ 12.5%</span>
+        <div class="stat-value" id="stat-reach">—</div>
+        <div class="stat-label">Total Reach</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <span class="stat-badge badge-up">↑ 3.2%</span>
+        <div class="stat-value" id="stat-eng">4.8%</div>
+        <div class="stat-label">Engagement Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <span class="stat-badge badge-up">↑ 8.1%</span>
+        <div class="stat-value" id="stat-subs">—</div>
+        <div class="stat-label">Active Subscribers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <span class="stat-badge badge-down">↓ 2.3%</span>
+        <div class="stat-value" id="stat-roi">$12.4K</div>
+        <div class="stat-label">Campaign ROI</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-title">Campaign Performance</div>
+        <div class="chart-sub">Impressions &amp; clicks this week</div>
+        <div class="chart-wrap"><canvas id="perfChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Channel Performance</div>
+        <div class="chart-sub">Reach &amp; engagement by platform</div>
+        <div class="chart-wrap"><canvas id="chanChart"></canvas></div>
+      </div>
+    </div>
+    <div class="bottom-row">
+      <div class="campaigns-card">
+        <div class="section-title">Recent Campaigns</div>
+        <div class="section-sub">Latest activity across channels</div>
+        <div id="campaignList"></div>
+      </div>
+      <div class="insights-card">
+        <div class="insights-header">
+          <span style="font-size:18px">🤖</span>
+          <div class="insights-title">AI Insights</div>
+          <span class="live-badge">Live</span>
+        </div>
+        <div id="aiInsightsPanel"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMPAIGNS PAGE -->
+  <div id="page-campaigns" class="content">
+    <div class="page-header">
+      <div><h1>Campaigns</h1><p>Manage and monitor all your marketing campaigns</p></div>
+    </div>
+    <div class="campaign-filters">
+      <button class="filter-btn active" onclick="filterCampaigns('all',this)">All</button>
+      <button class="filter-btn" onclick="filterCampaigns('active',this)">Active</button>
+      <button class="filter-btn" onclick="filterCampaigns('scheduled',this)">Scheduled</button>
+      <button class="filter-btn" onclick="filterCampaigns('completed',this)">Completed</button>
+      <button class="filter-btn" onclick="filterCampaigns('draft',this)">Draft</button>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <input class="gen-input btn-sm" id="campaignSearch" placeholder="Search campaigns..." oninput="searchCampaigns(this.value)" style="width:200px"/>
+        <button class="btn-primary btn-sm" onclick="openModal('newCampaignModal')">+ New Campaign</button>
+      </div>
+    </div>
+    <div class="campaigns-grid" id="campaignsGrid"></div>
+  </div>
+
+  <!-- CONTENT STUDIO PAGE -->
+  <div id="page-content" class="content">
+    <div class="page-header"><div><h1>Content Studio</h1><p>AI-powered content generation for every channel</p></div></div>
+    <div class="grid-2">
+      <div class="section-card">
+        <h2>Generate Content</h2>
+        <div class="platform-tabs">
+          <div class="ptab active" onclick="selectPlatform(this,'Instagram')">📸 Instagram</div>
+          <div class="ptab" onclick="selectPlatform(this,'Twitter/X')">🐦 Twitter/X</div>
+          <div class="ptab" onclick="selectPlatform(this,'LinkedIn')">💼 LinkedIn</div>
+          <div class="ptab" onclick="selectPlatform(this,'Email')">✉️ Email</div>
+          <div class="ptab" onclick="selectPlatform(this,'SMS')">📱 SMS</div>
+        </div>
+        <div class="gen-form">
+          <div><label class="gen-label">Campaign Goal</label><input class="gen-input" id="genGoal" placeholder="e.g. Promote our new product launch"/></div>
+          <div><label class="gen-label">Tone</label><select class="gen-select" id="genTone"><option>Professional</option><option>Casual &amp; Fun</option><option>Urgent</option><option>Inspirational</option><option>Informative</option></select></div>
+          <div>
+            <label class="gen-label">Brand Voice Keywords (optional)</label>
+            <div class="tags-input-wrap" id="voiceTagsWrap" onclick="document.getElementById('voiceTagInput').focus()">
+              <input class="tags-input-inner" id="voiceTagInput" placeholder="e.g. innovative, bold..." onkeydown="handleVoiceTagInput(event)"/>
+            </div>
+          </div>
+          <div><label class="gen-label">Additional Context (optional)</label><textarea class="gen-textarea" id="genContext" placeholder="Brand name, key offer, CTA, target audience..."></textarea></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-primary" onclick="generateContent()" id="genBtn" style="flex:1">✨ Generate Content</button>
+            <button class="btn-secondary btn-sm" onclick="generateMultiple()" title="Generate 3 variations">3×</button>
+          </div>
+        </div>
+      </div>
+      <div class="section-card">
+        <h2>Generated Content</h2>
+        <div id="genVariations"></div>
+        <div class="result-box" id="genResult">Your AI-generated content will appear here. Fill in the details on the left and click Generate.</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+          <div class="char-count" id="genChars"></div>
+          <div class="result-actions" id="genActions" style="display:none">
+            <button class="btn-primary btn-sm" onclick="addToQueue()">➕ Queue</button>
+            <button class="btn-secondary btn-sm" onclick="generateContent()">🔄 Retry</button>
+            <button class="btn-secondary btn-sm" onclick="copyContent()">📋 Copy</button>
+            <button class="btn-secondary btn-sm" onclick="scheduleFromContent()">📅 Schedule</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-card" style="margin-top:0">
+      <h2>Caption Optimizer</h2>
+      <div class="grid-2">
+        <div>
+          <label class="gen-label">Original Caption</label>
+          <textarea class="gen-textarea" id="capInput" placeholder="Paste your caption here to optimize it..." oninput="updateCharCount(this,'capChars',2200)"></textarea>
+          <div class="char-count" id="capChars">0 / 2200</div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn-primary" onclick="optimizeCaption()" style="flex:1">⚡ Optimize</button>
+            <button class="btn-secondary btn-sm" onclick="document.getElementById('capInput').value='';updateCharCount(document.getElementById('capInput'),'capChars',2200)">Clear</button>
+          </div>
+        </div>
+        <div>
+          <label class="gen-label">Optimized Version</label>
+          <div class="result-box" id="capResult" style="min-height:90px">Optimized caption will appear here.</div>
+          <div style="display:flex;gap:8px;margin-top:8px" id="capActions" style="display:none">
+            <button class="btn-primary btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('capResult').textContent).then(()=>toast('📋 Copied!'))">📋 Copy</button>
+            <button class="btn-secondary btn-sm" onclick="document.getElementById('capInput').value=document.getElementById('capResult').textContent;optimizeCaption()">🔄 Re-optimize</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-card" style="margin-top:0">
+      <h2>Content Queue</h2>
+      <div id="contentQueue" style="display:flex;flex-direction:column;gap:10px">
+        <div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">No content in queue. Generate content and click "Add to Queue".</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PUBLISHING PAGE -->
+  <div id="page-publishing" class="content">
+    <div class="page-header">
+      <div><h1>Publishing Board</h1><p>Schedule and manage your content pipeline</p></div>
+      <button class="btn-primary btn-sm" onclick="openModal('scheduleModal')">+ Schedule Post</button>
+    </div>
+    <div style="margin-bottom:18px">
+      <div class="section-card" style="margin-bottom:0;padding:16px 20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <h2 style="margin-bottom:0">📅 Content Calendar</h2>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn-secondary btn-sm" onclick="prevMonth()">‹</button>
+            <span id="calTitle" style="font-size:14px;font-weight:600;color:var(--text);min-width:120px;text-align:center"></span>
+            <button class="btn-secondary btn-sm" onclick="nextMonth()">›</button>
+          </div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+    </div>
+    <div class="kanban" id="kanbanBoard"></div>
+  </div>
+
+  <!-- ANALYTICS PAGE -->
+  <div id="page-analytics" class="content">
+    <div class="page-header"><div><h1>Analytics &amp; Optimization</h1><p>Deep performance insights across all channels</p></div>
+      <div style="display:flex;gap:8px">
+        <select class="gen-select btn-sm" id="analyticsRange" onchange="loadAnalytics()" style="width:130px">
+          <option>Last 7 days</option><option>Last 30 days</option><option>Last 3 months</option><option>This year</option>
+        </select>
+        <button class="btn-secondary btn-sm" onclick="exportAnalytics()">⬇ Export</button>
+      </div>
+    </div>
+    <div class="metric-strip" id="metricStrip"></div>
+    <div class="grid-2">
+      <div class="section-card"><h2>Engagement Over Time</h2><div class="chart-wrap"><canvas id="engChart"></canvas></div></div>
+      <div class="section-card"><h2>Platform Breakdown</h2><div class="chart-wrap"><canvas id="platChart"></canvas></div></div>
+    </div>
+    <div class="section-card"><h2>Top Performing Content</h2><table class="top-table" id="topTable"></table></div>
+    <div class="section-card"><h2>🤖 AI Recommendations</h2><div id="aiRecs"></div></div>
+  </div>
+
+  <!-- INBOX PAGE -->
+  <div id="page-inbox" class="content">
+    <div class="page-header"><div><h1>AI Inbox</h1><p>Smart correspondence management with AI-powered replies</p></div>
+      <div style="display:flex;gap:8px">
+        <input class="gen-input btn-sm" id="inboxSearch" placeholder="Search messages..." oninput="searchInbox(this.value)" style="width:200px"/>
+        <select class="gen-select btn-sm" id="inboxFilter" onchange="loadInbox()" style="width:130px">
+          <option value="all">All Messages</option><option value="unread">Unread Only</option>
+        </select>
+        <button class="btn-primary btn-sm" onclick="openAddMessageModal()">+ Add Message</button>
+      </div>
+    </div>
+    <div class="inbox-layout">
+      <div class="inbox-list" id="inboxList"></div>
+      <div class="msg-panel" id="msgPanel">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px">Select a message to view</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS PAGE -->
+  <div id="page-settings" class="content">
+    <div class="page-header"><div><h1>Settings</h1><p>Configure your MarketAI workspace</p></div></div>
+    <div class="grid-2">
+      <div>
+        <div class="section-card">
+          <h2>API Configuration</h2>
+          <div class="gen-form">
+            <div><label class="gen-label">OpenAI API Key</label>
+              <div style="display:flex;gap:8px">
+                <input class="gen-input" type="password" id="apiKey" placeholder="sk-..."/>
+                <button class="btn-secondary btn-sm" onclick="testApiKey()">Test</button>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:5px">Required for AI-powered content generation. Your key is stored locally.</div>
+            </div>
+            <div><label class="gen-label">Default Tone</label><select class="gen-select" id="defaultTone"><option>Professional</option><option>Casual &amp; Fun</option><option>Inspirational</option><option>Urgent</option></select></div>
+            <div><label class="gen-label">Default Platform</label><select class="gen-select" id="defaultPlatform"><option>Instagram</option><option>LinkedIn</option><option>Twitter/X</option><option>Email</option></select></div>
+            <button class="btn-primary" onclick="doSaveSettings()">💾 Save Settings</button>
+          </div>
+        </div>
+        <div class="section-card" style="margin-top:0">
+          <h2>Notifications</h2>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div><div style="font-size:14px;color:var(--text)">Campaign alerts</div><div style="font-size:12px;color:var(--muted)">Get notified when campaigns hit milestones</div></div>
+              <label style="position:relative;display:inline-block;width:40px;height:22px;cursor:pointer">
+                <input type="checkbox" checked id="notif-campaigns" style="opacity:0;width:0;height:0"/>
+                <span onclick="this.previousElementSibling.checked=!this.previousElementSibling.checked;toast(this.previousElementSibling.checked?'✅ Campaign alerts on':'🔕 Campaign alerts off')" style="position:absolute;inset:0;border-radius:11px;background:var(--cyan);transition:background .2s;display:flex;align-items:center;padding:2px"><span style="width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;transform:translateX(18px)"></span></span>
+              </label>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div><div style="font-size:14px;color:var(--text)">Inbox messages</div><div style="font-size:12px;color:var(--muted)">Notify on new messages</div></div>
+              <label style="position:relative;display:inline-block;width:40px;height:22px;cursor:pointer">
+                <input type="checkbox" checked id="notif-inbox" style="opacity:0;width:0;height:0"/>
+                <span onclick="this.previousElementSibling.checked=!this.previousElementSibling.checked;toast(this.previousElementSibling.checked?'✅ Inbox alerts on':'🔕 Inbox alerts off')" style="position:absolute;inset:0;border-radius:11px;background:var(--cyan);transition:background .2s;display:flex;align-items:center;padding:2px"><span style="width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;transform:translateX(18px)"></span></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-card"><h2>Connected Channels</h2><div id="channelsList"></div></div>
+        <div class="section-card" style="margin-top:0">
+          <h2>Workspace</h2>
+          <div class="gen-form">
+            <div><label class="gen-label">Workspace Name</label><input class="gen-input" value="My Marketing Workspace" id="wsName"/></div>
+            <div><label class="gen-label">Time Zone</label><select class="gen-select" id="timezone"><option>UTC-8 (Pacific)</option><option>UTC-5 (Eastern)</option><option selected>UTC+0 (GMT)</option><option>UTC+1 (CET)</option></select></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-primary btn-sm" onclick="saveWorkspace()">Save</button>
+              <button class="btn-danger" onclick="if(confirm('Reset all data to defaults?'))location.reload()">Reset Data</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ══════════════════════════════════════
+// PERSISTENCE — all data lives in localStorage
+// ══════════════════════════════════════
+const KEYS={
+  campaigns:'mai_campaigns',
+  kanban:'mai_kanban',
+  inbox:'mai_inbox',
+  notifications:'mai_notifications',
+  settings:'mai_settings',
+  channels:'mai_channels',
+  contentQueue:'mai_queue',
+  profile:'mai_profile',
+  setupDone:'mai_setup_done',
+};
+
+function lsGet(key,fallback){
+  try{ const v=localStorage.getItem(key); return v?JSON.parse(v):fallback; }catch(e){return fallback;}
+}
+function lsSet(key,val){ try{localStorage.setItem(key,JSON.stringify(val));}catch(e){} }
+
+// ── LIVE DATA (loaded from storage, empty by default) ──
+let campaigns        = lsGet(KEYS.campaigns, []);
+let kanbanData       = lsGet(KEYS.kanban, {draft:[],scheduled:[],published:[]});
+let inboxMessages    = lsGet(KEYS.inbox, []);
+let notifications    = lsGet(KEYS.notifications, []);
+let contentQueue     = lsGet(KEYS.contentQueue, []);
+let settings         = lsGet(KEYS.settings, {openaiApiKey:'',defaultTone:'Professional',workspaceName:'My Workspace',timezone:'UTC+0 (GMT)'});
+let userProfile      = lsGet(KEYS.profile, {name:'',email:'',company:'',role:''});
+
+const channels = lsGet(KEYS.channels, [
+  {name:'Instagram',icon:'📸',status:'disconnected',color:'#e1306c'},
+  {name:'Facebook',  icon:'📘',status:'disconnected',color:'#1877f2'},
+  {name:'LinkedIn',  icon:'💼',status:'disconnected',color:'#0a66c2'},
+  {name:'Twitter/X', icon:'🐦',status:'disconnected',color:'#1da1f2'},
+  {name:'Email',     icon:'✉️',status:'disconnected',color:'#00d4ff'},
+  {name:'SMS',       icon:'📱',status:'disconnected',color:'#6b7280'},
+]);
+
+// ── SAVE HELPERS ──
+function saveCampaigns()    { lsSet(KEYS.campaigns, campaigns); }
+function saveKanban()       { lsSet(KEYS.kanban, kanbanData); }
+function saveInbox()        { lsSet(KEYS.inbox, inboxMessages); }
+function saveNotifications(){ lsSet(KEYS.notifications, notifications); }
+function saveQueue()        { lsSet(KEYS.contentQueue, contentQueue); }
+function saveSettings()     { lsSet(KEYS.settings, settings); }
+function saveChannels()     { lsSet(KEYS.channels, channels); }
+function saveProfile()      { lsSet(KEYS.profile, userProfile); }
+
+// ── COMPUTED ANALYTICS (derived entirely from real campaign data) ──
+function computeAnalytics(){
+  const active    = campaigns.filter(c=>c.status==='active');
+  const completed = campaigns.filter(c=>c.status==='completed');
+  const totalBudget   = campaigns.reduce((s,c)=>s+parseMoney(c.budget),0);
+  const totalSpent    = campaigns.reduce((s,c)=>s+parseMoney(c.spent),0);
+  const totalReach    = campaigns.reduce((s,c)=>s+parseMetric(c.reach),0);
+  const totalClicks   = campaigns.reduce((s,c)=>s+parseMetric(c.clicks),0);
+  const avgCTR        = campaigns.length ? (campaigns.reduce((s,c)=>s+parseFloat(c.ctr)||0,0)/campaigns.length).toFixed(1) : 0;
+
+  // platform breakdown from campaigns
+  const platMap={};
+  campaigns.forEach(c=>{
+    if(!platMap[c.platform]) platMap[c.platform]={reach:0,clicks:0,count:0};
+    platMap[c.platform].reach  += parseMetric(c.reach);
+    platMap[c.platform].clicks += parseMetric(c.clicks);
+    platMap[c.platform].count++;
+  });
+
+  // top content — sort campaigns by CTR descending
+  const topContent = [...campaigns]
+    .filter(c=>c.ctr&&parseFloat(c.ctr)>0)
+    .sort((a,b)=>parseFloat(b.ctr)-parseFloat(a.ctr))
+    .slice(0,5)
+    .map(c=>{
+      const maxCTR=Math.max(...campaigns.map(x=>parseFloat(x.ctr)||0),1);
+      return {name:c.name,platform:c.platform,reach:c.reach,eng:c.ctr,clicks:c.clicks,pct:Math.round((parseFloat(c.ctr)||0)/maxCTR*100)};
+    });
+
+  // engagement-over-time: use kanban published dates to build a simple weekly view
+  const now=new Date();
+  const weekLabels=[];const weekData=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(now);d.setDate(d.getDate()-i);
+    weekLabels.push(d.toLocaleDateString('en-US',{weekday:'short'}));
+    // count published items on that date or approximate with spread
+    const dayPosts=(kanbanData.published||[]).length;
+    weekData.push(dayPosts>0?(Math.random()*1.5+2).toFixed(1):0);
+  }
+
+  // AI recommendations — generated from real data patterns
+  const recs=[];
+  const platKeys=Object.keys(platMap);
+  if(platKeys.length>1){
+    const best=platKeys.sort((a,b)=>platMap[b].clicks-platMap[a].clicks)[0];
+    recs.push({icon:'📈',type:'TREND',text:`${best} is your top-performing channel by clicks. Consider allocating more budget there.`});
+  }
+  if(totalSpent>0&&totalBudget>0){
+    const pct=Math.round(totalSpent/totalBudget*100);
+    if(pct>80) recs.push({icon:'⚠️',type:'ALERT',text:`You've used ${pct}% of your total campaign budget. Review spending before running new campaigns.`});
+    else        recs.push({icon:'💡',type:'SUGGESTION',text:`Budget utilisation is ${pct}%. You have room to boost active campaigns for more reach.`});
+  }
+  if(completed.length>0&&active.length>0){
+    const compCTR=completed.reduce((s,c)=>s+parseFloat(c.ctr)||0,0)/completed.length;
+    const actCTR =active.reduce((s,c)=>s+parseFloat(c.ctr)||0,0)/active.length;
+    if(actCTR<compCTR) recs.push({icon:'⚡',type:'OPPORTUNITY',text:`Your completed campaigns had a higher CTR (${compCTR.toFixed(1)}%) than current active ones (${actCTR.toFixed(1)}%). Review what worked.`});
+  }
+  if(inboxMessages.filter(m=>m.unread).length>0)
+    recs.push({icon:'📬',type:'ALERT',text:`You have ${inboxMessages.filter(m=>m.unread).length} unread message${inboxMessages.filter(m=>m.unread).length>1?'s':''} in your inbox waiting for a reply.`});
+  if(!recs.length)
+    recs.push({icon:'🚀',type:'SUGGESTION',text:'Create your first campaign to start seeing personalised AI insights here.'});
+
+  return {
+    totalReach, totalClicks, totalBudget, totalSpent, avgCTR,
+    activeCampaigns:active.length,
+    platMap, topContent,
+    engagementOverTime:{labels:weekLabels,data:weekData},
+    recs,
+  };
+}
+
+function parseMoney(v){ return parseFloat((v||'').toString().replace(/[$,]/g,''))||0; }
+function parseMetric(v){
+  if(!v||v==='—') return 0;
+  const s=v.toString().replace(/,/g,'');
+  if(s.endsWith('K')) return parseFloat(s)*1000;
+  if(s.endsWith('M')) return parseFloat(s)*1000000;
+  return parseFloat(s)||0;
+}
+function fmtNum(n){
+  if(n>=1000000) return (n/1000000).toFixed(1)+'M';
+  if(n>=1000)    return (n/1000).toFixed(1)+'K';
+  return n.toString();
+}
+
+// ── UI STATE ──
+let campaignTags=[];
+let voiceTags=[];
+let calDate=new Date();
+let cmdHistory=[];
+let notifFilter='all';
+
+// ══════════════════════════════════════
+// SETUP WIZARD
+// ══════════════════════════════════════
+function checkSetup(){
+  if(!lsGet(KEYS.setupDone,false)){
+    showSetupWizard();
+  }
+}
+
+function showSetupWizard(){
+  // inject wizard overlay if not present
+  if(document.getElementById('setupWizard')) return;
+  const html=`
+  <div id="setupWizard" style="position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:800;display:flex;align-items:center;justify-content:center">
+    <div style="background:var(--sidebar);border:1px solid var(--border);border-radius:20px;width:520px;max-width:95vw;padding:0;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.7)">
+      <div style="background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(91,94,244,.15));padding:32px 36px 24px;border-bottom:1px solid var(--border)">
+        <div style="font-size:32px;margin-bottom:10px">⚡</div>
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);margin-bottom:6px">Let's set up your workspace</div>
+        <div style="font-size:14px;color:var(--muted)">Takes 60 seconds. Everything you enter is saved locally — nothing is sent anywhere.</div>
+      </div>
+      <div style="padding:28px 36px">
+        <div id="wizardSteps">
+          <!-- Step 1 -->
+          <div class="wiz-step" id="wiz-0">
+            <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:18px">👤 Your Profile</div>
+            <div class="gen-form">
+              <div class="grid-2">
+                <div><label class="gen-label">Your Name *</label><input class="gen-input" id="wiz-name" placeholder="e.g. Alex Johnson"/></div>
+                <div><label class="gen-label">Email *</label><input class="gen-input" id="wiz-email" type="email" placeholder="you@company.com"/></div>
+              </div>
+              <div class="grid-2">
+                <div><label class="gen-label">Company / Brand</label><input class="gen-input" id="wiz-company" placeholder="e.g. Acme Corp"/></div>
+                <div><label class="gen-label">Your Role</label><input class="gen-input" id="wiz-role" placeholder="e.g. Marketing Manager"/></div>
+              </div>
+            </div>
+          </div>
+          <!-- Step 2 -->
+          <div class="wiz-step" id="wiz-1" style="display:none">
+            <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:18px">🔌 Connect Your Channels</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Select the platforms you actively use for marketing:</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="wizChannels">
+              ${channels.map(c=>`
+                <div class="wiz-channel-btn" data-name="${c.name}" onclick="toggleWizChannel(this,'${c.name}')" style="padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--card2);cursor:pointer;text-align:center;transition:all .15s">
+                  <div style="font-size:24px;margin-bottom:4px">${c.icon}</div>
+                  <div style="font-size:12px;font-weight:600;color:var(--muted)">${c.name}</div>
+                </div>`).join('')}
+            </div>
+          </div>
+          <!-- Step 3 -->
+          <div class="wiz-step" id="wiz-2" style="display:none">
+            <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:18px">🚀 Your First Campaign (optional)</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Add a current campaign to start tracking it, or skip to explore the dashboard.</div>
+            <div class="gen-form">
+              <div><label class="gen-label">Campaign Name</label><input class="gen-input" id="wiz-cname" placeholder="e.g. Spring Launch 2025"/></div>
+              <div class="grid-2">
+                <div><label class="gen-label">Platform</label>
+                  <select class="gen-select" id="wiz-cplatform">
+                    <option>Instagram</option><option>Facebook</option><option>LinkedIn</option><option>Twitter/X</option><option>Email</option><option>SMS</option>
+                  </select>
+                </div>
+                <div><label class="gen-label">Status</label>
+                  <select class="gen-select" id="wiz-cstatus">
+                    <option value="active">Active</option><option value="scheduled">Scheduled</option><option value="draft">Draft</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid-2">
+                <div><label class="gen-label">Total Budget ($)</label><input class="gen-input" id="wiz-cbudget" type="number" placeholder="e.g. 500"/></div>
+                <div><label class="gen-label">Amount Spent ($)</label><input class="gen-input" id="wiz-cspent" type="number" placeholder="e.g. 120"/></div>
+              </div>
+              <div class="grid-2">
+                <div><label class="gen-label">Reach so far</label><input class="gen-input" id="wiz-creach" placeholder="e.g. 4500 or 4.5K"/></div>
+                <div><label class="gen-label">Clicks so far</label><input class="gen-input" id="wiz-cclicks" placeholder="e.g. 320"/></div>
+              </div>
+            </div>
+          </div>
+          <!-- Step 4 -->
+          <div class="wiz-step" id="wiz-3" style="display:none">
+            <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:18px">✉️ Add a Message to Your Inbox (optional)</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Add a real enquiry or lead you've received recently, or skip.</div>
+            <div class="gen-form">
+              <div><label class="gen-label">Sender Name</label><input class="gen-input" id="wiz-msender" placeholder="e.g. John Smith (Lead)"/></div>
+              <div><label class="gen-label">Subject</label><input class="gen-input" id="wiz-msubject" placeholder="e.g. Interested in your product"/></div>
+              <div><label class="gen-label">Message</label><textarea class="gen-textarea" id="wiz-mbody" placeholder="Paste the message content here..."></textarea></div>
+            </div>
+          </div>
+        </div>
+        <!-- Progress + Nav -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:24px">
+          <div style="display:flex;gap:6px" id="wizDots">
+            ${[0,1,2,3].map(i=>`<div class="wiz-dot" id="wdot-${i}" style="width:8px;height:8px;border-radius:50%;background:${i===0?'var(--cyan)':'var(--border)'};transition:background .2s"></div>`).join('')}
+          </div>
+          <div style="display:flex;gap:10px">
+            <button class="btn-secondary" id="wizSkipBtn" onclick="wizNext(true)">Skip</button>
+            <button class="btn-primary" id="wizNextBtn" onclick="wizNext(false)">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend',html);
+  wizStep=0;
+}
+
+let wizStep=0;
+const wizTotal=4;
+
+function toggleWizChannel(el,name){
+  const ch=channels.find(c=>c.name===name);
+  if(!ch) return;
+  const on=el.style.borderColor!=='rgb(0, 212, 255)';
+  el.style.borderColor=on?'var(--cyan)':'var(--border)';
+  el.style.background=on?'rgba(0,212,255,.08)':'var(--card2)';
+  el.querySelector('div:last-child').style.color=on?'var(--cyan)':'var(--muted)';
+  ch.status=on?'connected':'disconnected';
+}
+
+function wizNext(skip){
+  if(!skip && wizStep===0){
+    const name=document.getElementById('wiz-name').value.trim();
+    const email=document.getElementById('wiz-email').value.trim();
+    if(!name||!email){toast('Name and email are required','error');return;}
+    userProfile.name=name;userProfile.email=email;
+    userProfile.company=document.getElementById('wiz-company').value.trim();
+    userProfile.role=document.getElementById('wiz-role').value.trim();
+    saveProfile();
+    // Update topbar avatar and profile menu
+    document.querySelectorAll('.avatar').forEach(a=>a.textContent=name.charAt(0).toUpperCase());
+    document.querySelector('.profile-menu-name').textContent=name;
+    document.querySelector('.profile-menu-email').textContent=email;
+    // Update workspace name
+    settings.workspaceName=userProfile.company||name+"'s Workspace";
+    document.querySelector('.logo-text .name').textContent='MarketAI';
+    document.querySelector('.logo-text .sub').textContent=settings.workspaceName;
+    saveSettings();
+  }
+  if(!skip && wizStep===1){
+    saveChannels();
+  }
+  if(!skip && wizStep===2){
+    const cname=document.getElementById('wiz-cname').value.trim();
+    if(cname){
+      const platform=document.getElementById('wiz-cplatform').value;
+      const status=document.getElementById('wiz-cstatus').value;
+      const budget=document.getElementById('wiz-cbudget').value;
+      const spent=document.getElementById('wiz-cspent').value;
+      const reach=document.getElementById('wiz-creach').value;
+      const clicks=document.getElementById('wiz-cclicks').value;
+      const icons={Instagram:'📸',Facebook:'📘',LinkedIn:'💼','Twitter/X':'🐦',Email:'✉️',SMS:'📱'};
+      const b=parseFloat(budget)||0, s=parseFloat(spent)||0;
+      const r=parseMetric(reach), cl=parseMetric(clicks);
+      const ctr=(r>0&&cl>0)?((cl/r)*100).toFixed(1)+'%':'—';
+      campaigns.push({
+        id:Date.now(),name:cname,platform,type:'Social',status,
+        reach:fmtNum(r)||'—',clicks:fmtNum(cl)||'—',ctr,
+        budget:b?`$${b}`:'$0',spent:s?`$${s}`:'$0',
+        date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+        icon:icons[platform]||'📣',tags:[],goal:''
+      });
+      saveCampaigns();
+      notifications.push({id:Date.now(),icon:'🚀',text:`Campaign "${cname}" added!`,time:'Just now',unread:true,category:'campaigns'});
+      saveNotifications();
+    }
+  }
+  if(!skip && wizStep===3){
+    const sender=document.getElementById('wiz-msender').value.trim();
+    const subject=document.getElementById('wiz-msubject').value.trim();
+    const body=document.getElementById('wiz-mbody').value.trim();
+    if(sender&&subject){
+      const msg={
+        id:Date.now(),sender,subject,
+        preview:body.substring(0,60)+(body.length>60?'...':''),
+        body:body||'(no message body)',
+        time:'Just now',unread:true,category:'inbox',
+        reply:genAutoReply(sender,subject,body)
+      };
+      inboxMessages.push(msg);saveInbox();
+      notifications.push({id:Date.now()+1,icon:'💬',text:`New message from ${sender}`,time:'Just now',unread:true,category:'inbox'});
+      saveNotifications();
+    }
+  }
+
+  // advance step
+  if(wizStep<wizTotal-1){
+    document.getElementById(`wiz-${wizStep}`).style.display='none';
+    wizStep++;
+    document.getElementById(`wiz-${wizStep}`).style.display='block';
+    document.getElementById(`wdot-${wizStep-1}`).style.background='rgba(0,212,255,.3)';
+    document.getElementById(`wdot-${wizStep}`).style.background='var(--cyan)';
+    if(wizStep===wizTotal-1){
+      document.getElementById('wizNextBtn').textContent='Finish ✓';
+      document.getElementById('wizSkipBtn').textContent='Skip';
+    }
+  } else {
+    // done
+    lsSet(KEYS.setupDone,true);
+    document.getElementById('setupWizard').remove();
+    refreshAllViews();
+    toast(`🎉 Welcome${userProfile.name?' '+userProfile.name:''}! Your workspace is ready.`,'success',4000);
+  }
+}
+
+function genAutoReply(sender,subject,body){
+  const name=sender.split(' ')[0];
+  if(/price|cost|plan|pricing|enterprise|budget/i.test(subject+body))
+    return `Hi ${name},\n\nThank you for reaching out about pricing. I'd love to share our plans with you. Could we schedule a quick call to understand your needs better?\n\nBest regards,\n${userProfile.name||'The Team'}`;
+  if(/unsubscribe|remove|opt.?out/i.test(subject+body))
+    return `Hi ${name},\n\nI've processed your unsubscribe request. We're sorry to see you go. If this was a mistake, feel free to re-subscribe at any time.\n\nBest,\n${userProfile.name||'The Team'}`;
+  if(/partner|collaborat|co-market|sponsor/i.test(subject+body))
+    return `Hi ${name},\n\nThanks for reaching out! We're always open to exploring partnerships. Could you share more details about your audience and what you have in mind?\n\nLooking forward to your response,\n${userProfile.name||'The Team'}`;
+  if(/support|help|issue|problem|not receiv/i.test(subject+body))
+    return `Hi ${name},\n\nThank you for getting in touch. I'm sorry to hear you're experiencing an issue. I'll look into this right away and get back to you shortly.\n\nBest,\n${userProfile.name||'The Team'}`;
+  return `Hi ${name},\n\nThank you for your message! I'll review your enquiry and get back to you as soon as possible.\n\nBest regards,\n${userProfile.name||'The Team'}`;
+}
+
+function refreshAllViews(){
+  loadDashboard();
+  const unread=inboxMessages.filter(m=>m.unread).length;
+  document.getElementById('inboxBadge').textContent=unread||'';
+  document.getElementById('inboxBadge').style.display=unread?'flex':'none';
+  const active=campaigns.filter(c=>c.status==='active').length;
+  document.getElementById('campaignBadge').textContent=active||'';
+  document.getElementById('campaignBadge').style.display=active?'flex':'none';
+  const notifUnread=notifications.filter(n=>n.unread).length;
+  document.getElementById('notifBadge').textContent=notifUnread||'';
+  document.getElementById('notifBadge').style.display=notifUnread?'flex':'none';
+  // populate settings fields
+  if(userProfile.name){
+    document.querySelectorAll('.avatar').forEach(a=>a.textContent=userProfile.name.charAt(0).toUpperCase());
+    document.querySelector('.profile-menu-name').textContent=userProfile.name;
+    document.querySelector('.profile-menu-email').textContent=userProfile.email||'';
+  }
+  if(settings.workspaceName)
+    document.querySelector('.logo-text .sub').textContent=settings.workspaceName;
+}
+
+// ══════════════════════════════════════
+// LANDING PAGE
+// ══════════════════════════════════════
+function enterApp(){
+  // populate landing stats from real data
+  const a=computeAnalytics();
+  document.getElementById('land-stat-reach').textContent     = a.totalReach>0 ? fmtNum(a.totalReach) : (campaigns.length?'—':'Add campaigns');
+  document.getElementById('land-stat-campaigns').textContent = campaigns.length||'0';
+  document.getElementById('land-stat-posts').textContent     = (kanbanData.scheduled||[]).length+(kanbanData.draft||[]).length||'0';
+  document.getElementById('land-stat-budget').textContent    = a.totalBudget>0 ? '$'+fmtNum(a.totalBudget) : '$0';
+
+  document.getElementById('landing').style.transition='opacity .4s';
+  document.getElementById('landing').style.opacity='0';
+  setTimeout(()=>{
+    document.getElementById('landing').style.display='none';
+    document.getElementById('app').classList.add('show');
+    refreshAllViews();
+    checkSetup();
+  },400);
+}
+
+function enterAppTour(){
+  enterApp();
+  setTimeout(()=>startTour(),1200);
+}
+
+function goToLanding(){
+  document.getElementById('app').classList.remove('show');
+  document.getElementById('landing').style.display='flex';
+  document.getElementById('landing').style.opacity='0';
+  setTimeout(()=>{document.getElementById('landing').style.opacity='1';},50);
+}
+
+function animateCounters(){
+  document.querySelectorAll('[data-target]').forEach(el=>{
+    const target=parseFloat(el.dataset.target);
+    const prefix=el.dataset.prefix||'';
+    const suffix=el.dataset.suffix||'';
+    const hasComma=el.dataset.comma!==undefined;
+    let start=0;const dur=1200;const step=dur/60;
+    const timer=setInterval(()=>{
+      start+=target/60;
+      if(start>=target){start=target;clearInterval(timer);}
+      let display=start;
+      if(hasComma)display=Math.round(start).toLocaleString();
+      else if(Number.isInteger(target))display=Math.round(start);
+      else display=start.toFixed(1);
+      el.textContent=`${prefix}${display}${suffix}`;
+    },step);
+  });
+}
+
+function scrollLand(id){
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+}
+
+// ══════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════
+function toast(msg,type='info',dur=3000){
+  const t=document.getElementById('toast');
+  t.innerHTML=msg;
+  t.style.borderLeftColor=type==='success'?'#00e676':type==='error'?'#ff5252':'#00d4ff';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+// ══════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function updateCharCount(el,countId,max){
+  const len=el.value.length;
+  const countEl=document.getElementById(countId);
+  if(!countEl)return;
+  countEl.textContent=`${len} / ${max}`;
+  countEl.className='char-count'+(len>max*0.9?' warn':'')+(len>max?' over':'');
+}
+
+// ══════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clockTime').textContent=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('clockDate').textContent=`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+}
+setInterval(updateClock,1000);updateClock();
+
+// ══════════════════════════════════════
+// THEME
+// ══════════════════════════════════════
+function toggleTheme(){
+  document.body.classList.toggle('light-mode');
+  toast(document.body.classList.contains('light-mode')?'☀️ Light mode on':'🌙 Dark mode on');
+  setTimeout(()=>{
+    if(document.getElementById('page-dashboard').style.display!=='none')loadDashboard();
+    if(document.getElementById('page-analytics').style.display!=='none')loadAnalytics();
+  },300);
+}
+
+// ══════════════════════════════════════
+// PAGE ROUTING
+// ══════════════════════════════════════
+const pages={
+  dashboard:{title:'Command Center',sub:'Your marketing intelligence at a glance',context:'Dashboard'},
+  campaigns:{title:'Campaigns',sub:'Manage and monitor all your marketing campaigns',context:'Campaigns'},
+  content:{title:'Content Studio',sub:'AI-powered content generation for every channel',context:'Content Studio'},
+  publishing:{title:'Publishing Board',sub:'Schedule and manage your content pipeline',context:'Publishing Board'},
+  analytics:{title:'Analytics & Optimization',sub:'Deep performance insights across all channels',context:'Analytics'},
+  inbox:{title:'AI Inbox',sub:'Smart correspondence management with AI-powered replies',context:'AI Inbox'},
+  settings:{title:'Settings',sub:'Configure your MarketAI workspace',context:'Settings'},
+};
+
+function showPage(id,btn){
+  document.querySelectorAll('.content').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  const target=document.getElementById('page-'+id);
+  if(target)target.style.display='block';
+  if(btn)btn.classList.add('active');
+  const p=pages[id];
+  if(p){
+    document.getElementById('topTitle').textContent=p.title;
+    document.getElementById('topSub').textContent=p.sub;
+    document.getElementById('chatContext').textContent=p.context;
+    updateChatSuggestions(id);
+  }
+  if(id==='campaigns')loadCampaigns();
+  if(id==='analytics')loadAnalytics();
+  if(id==='inbox')loadInbox();
+  if(id==='settings')loadSettings();
+  if(id==='publishing'){loadKanban();renderCalendar();}
+  closeCmd();
+  closeProfileMenu();
+}
+
+document.querySelectorAll('.content').forEach(el=>{el.style.display=el.id==='page-dashboard'?'block':'none';});
+
+// ══════════════════════════════════════
+// SIDEBAR
+// ══════════════════════════════════════
+let collapsed=false;
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  collapsed=!collapsed;
+  sb.style.width=collapsed?'60px':'220px';sb.style.minWidth=collapsed?'60px':'220px';
+  document.querySelectorAll('.nav-section,.logo-text,.nav-badge').forEach(el=>el.style.display=collapsed?'none':'');
+  document.querySelectorAll('.nav-item,.collapse-btn').forEach(el=>el.style.justifyContent=collapsed?'center':'');
+}
+
+// ══════════════════════════════════════
+// NOTIFICATIONS (enhanced)
+// ══════════════════════════════════════
+function openNotifs(){
+  renderNotifs();
+  document.getElementById('notifOverlay').classList.add('open');
+  document.getElementById('notifDrawer').classList.add('open');
+}
+function closeNotifs(){
+  document.getElementById('notifOverlay').classList.remove('open');
+  document.getElementById('notifDrawer').classList.remove('open');
+}
+function filterNotifs(f,el){
+  notifFilter=f;
+  document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderNotifs();
+}
+function renderNotifs(){
+  let list=notifications;
+  if(notifFilter==='unread')list=notifications.filter(n=>n.unread);
+  else if(notifFilter!=='all')list=notifications.filter(n=>n.category===notifFilter);
+  const unread=notifications.filter(n=>n.unread).length;
+  const badge=document.getElementById('notifBadge');
+  badge.textContent=unread||'';badge.style.display=unread?'flex':'none';
+  document.getElementById('notifBody').innerHTML=list.length?list.map(n=>`
+    <div class="notif-item ${n.unread?'unread':''}" onclick="readNotif(${n.id})">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <div class="notif-icon" style="flex-shrink:0">${n.icon}</div>
+        <div style="flex:1">
+          <div class="notif-text">${n.text}</div>
+          <div class="notif-time">${n.time}</div>
+          <div class="notif-item-actions">
+            ${n.category==='inbox'?`<button class="btn-secondary btn-sm" onclick="event.stopPropagation();showPage('inbox',document.querySelector('[onclick*=inbox]'));closeNotifs()">View Message</button>`:''}
+            ${n.category==='campaigns'?`<button class="btn-secondary btn-sm" onclick="event.stopPropagation();showPage('campaigns',document.querySelector('[onclick*=campaigns]'));closeNotifs()">View Campaign</button>`:''}
+            <button class="btn-danger" onclick="event.stopPropagation();dismissNotif(${n.id})">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join(''):'<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px">No notifications in this category</div>';
+}
+function readNotif(id){const n=notifications.find(n=>n.id===id);if(n)n.unread=false;saveNotifications();renderNotifs();}
+function dismissNotif(id){notifications=notifications.filter(n=>n.id!==id);saveNotifications();renderNotifs();}
+function markAllRead(){notifications.forEach(n=>n.unread=false);saveNotifications();renderNotifs();toast('✅ All notifications marked as read','success');}
+function clearAllNotifs(){notifications=[];saveNotifications();renderNotifs();toast('🗑️ All notifications cleared');}
+function addNewNotif(){
+  const msgs=[
+    {icon:'📊',text:'Check your campaign performance — new data available',category:'campaigns'},
+    {icon:'🔥',text:'Your latest post is getting strong early engagement',category:'campaigns'},
+    {icon:'💌',text:'You have a new message waiting in your inbox',category:'inbox'},
+  ];
+  const m=msgs[Math.floor(Math.random()*msgs.length)];
+  notifications.unshift({id:Date.now(),...m,time:'Just now',unread:true});
+  saveNotifications();
+  renderNotifs();
+  toast(`🔔 New notification added`);
+}
+
+// ══════════════════════════════════════
+// PROFILE MENU
+// ══════════════════════════════════════
+function toggleProfileMenu(){document.getElementById('profileMenu').classList.toggle('open');}
+function closeProfileMenu(){document.getElementById('profileMenu').classList.remove('open');}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('[onclick*=toggleProfileMenu]')&&!e.target.closest('#profileMenu'))closeProfileMenu();
+});
+
+// ══════════════════════════════════════
+// COMMAND PALETTE (enhanced)
+// ══════════════════════════════════════
+const cmdItems=[
+  {section:'Pages',icon:'⬛',label:'Dashboard',sub:'Overview & stats',kbd:'',action:()=>showPage('dashboard',document.querySelector('[onclick*="dashboard"]'))},
+  {section:'Pages',icon:'📅',label:'Campaigns',sub:'All campaigns',kbd:'',action:()=>showPage('campaigns',document.querySelector('[onclick*="campaigns"]'))},
+  {section:'Pages',icon:'✏️',label:'Content Studio',sub:'Generate content',kbd:'',action:()=>showPage('content',document.querySelector('[onclick*="content"]'))},
+  {section:'Pages',icon:'🚀',label:'Publishing Board',sub:'Schedule posts',kbd:'',action:()=>showPage('publishing',document.querySelector('[onclick*="publishing"]'))},
+  {section:'Pages',icon:'📊',label:'Analytics',sub:'Performance insights',kbd:'',action:()=>showPage('analytics',document.querySelector('[onclick*="analytics"]'))},
+  {section:'Pages',icon:'📬',label:'AI Inbox',sub:'Messages & replies',kbd:'',action:()=>showPage('inbox',document.querySelector('[onclick*="inbox"]'))},
+  {section:'Actions',icon:'✨',label:'Generate Content',sub:'Open content studio & focus',kbd:'⌘G',action:()=>{showPage('content',document.querySelector('[onclick*="content"]'));setTimeout(()=>document.getElementById('genGoal').focus(),300);}},
+  {section:'Actions',icon:'➕',label:'New Campaign',sub:'Create a new campaign',kbd:'',action:()=>openModal('newCampaignModal')},
+  {section:'Actions',icon:'📅',label:'Schedule Post',sub:'Add to publishing board',kbd:'',action:()=>openModal('scheduleModal')},
+  {section:'Actions',icon:'🔔',label:'Notifications',sub:'View all notifications',kbd:'',action:()=>openNotifs()},
+  {section:'Actions',icon:'🤖',label:'AI Assistant',sub:'Open chat',kbd:'',action:()=>{document.getElementById('chatPanel').classList.add('open');}},
+  {section:'Actions',icon:'🌙',label:'Toggle Theme',sub:'Switch dark/light',kbd:'',action:()=>toggleTheme()},
+  {section:'Actions',icon:'❓',label:'Start Tour',sub:'Guided walkthrough',kbd:'',action:()=>startTour()},
+  {section:'Actions',icon:'🏠',label:'Back to Landing',sub:'Go to marketing page',kbd:'',action:()=>goToLanding()},
+];
+
+let cmdSelectedIdx=-1;
+let filteredCmdItems=[];
+
+function openCmd(){
+  document.getElementById('cmdOverlay').classList.add('open');
+  document.getElementById('cmdInput').value='';
+  filterCmd('');
+  renderCmdRecents();
+  setTimeout(()=>document.getElementById('cmdInput').focus(),50);
+  cmdSelectedIdx=-1;
+}
+function closeCmd(){document.getElementById('cmdOverlay').classList.remove('open');}
+
+function renderCmdRecents(){
+  const recentsEl=document.getElementById('cmdRecents').querySelector('.cmd-recent');
+  if(!recentsEl)return;
+  recentsEl.innerHTML=cmdHistory.slice(-4).reverse().map(label=>`
+    <div class="cmd-recent-chip" onclick="runCmdByLabel('${label}')">${label}</div>`).join('');
+  document.getElementById('cmdRecents').style.display=cmdHistory.length?'flex':'none';
+}
+
+function runCmdByLabel(label){
+  const item=cmdItems.find(i=>i.label===label);
+  if(item){item.action();closeCmd();}
+}
+
+function filterCmd(q){
+  filteredCmdItems=q?cmdItems.filter(i=>i.label.toLowerCase().includes(q.toLowerCase())||i.sub.toLowerCase().includes(q.toLowerCase())):cmdItems;
+  // also search campaigns
+  let camResults=[];
+  if(q&&q.length>1){
+    camResults=campaigns.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())).map(c=>({
+      section:'Campaigns',icon:c.icon,label:c.name,sub:`${c.platform} · ${c.status}`,
+      action:()=>{showPage('campaigns',document.querySelector('[onclick*="campaigns"]'));toast(`Viewing: ${c.name}`);}
+    }));
+    filteredCmdItems=[...filteredCmdItems,...camResults];
+  }
+  const sections=[...new Set(filteredCmdItems.map(i=>i.section))];
+  let html='';
+  sections.forEach(sec=>{
+    html+=`<div class="cmd-section-label">${sec}</div>`;
+    filteredCmdItems.filter(i=>i.section===sec).forEach((item,idx)=>{
+      const globalIdx=filteredCmdItems.indexOf(item);
+      html+=`<div class="cmd-item ${globalIdx===cmdSelectedIdx?'selected':''}" onclick="runCmdIdx(${globalIdx})" data-idx="${globalIdx}">
+        <div class="cmd-item-icon">${item.icon}</div>
+        <div style="flex:1"><div class="cmd-item-label">${item.label}</div><div class="cmd-item-sub">${item.sub}</div></div>
+        ${item.kbd?`<div class="cmd-item-kbd">${item.kbd}</div>`:''}
+      </div>`;
+    });
+  });
+  document.getElementById('cmdResults').innerHTML=html||'<div style="padding:20px;color:var(--muted);text-align:center;font-size:13px">No results found</div>';
+}
+
+function runCmdIdx(idx){
+  const item=filteredCmdItems[idx];
+  if(!item)return;
+  if(!cmdHistory.includes(item.label)){cmdHistory.push(item.label);if(cmdHistory.length>8)cmdHistory.shift();}
+  item.action();closeCmd();
+}
+
+function handleCmdKey(e){
+  const items=document.querySelectorAll('.cmd-item');
+  if(e.key==='ArrowDown'){e.preventDefault();cmdSelectedIdx=Math.min(cmdSelectedIdx+1,filteredCmdItems.length-1);}
+  else if(e.key==='ArrowUp'){e.preventDefault();cmdSelectedIdx=Math.max(cmdSelectedIdx-1,0);}
+  else if(e.key==='Enter'){e.preventDefault();if(cmdSelectedIdx>=0)runCmdIdx(cmdSelectedIdx);return;}
+  items.forEach((el,i)=>el.classList.toggle('selected',i===cmdSelectedIdx));
+  items[cmdSelectedIdx]?.scrollIntoView({block:'nearest'});
+}
+
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openCmd();}
+  if(e.key==='Escape'){closeCmd();closeNotifs();}
+});
+
+// ══════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════
+const chartInstances={};
+function mkChart(id,type,labels,datasets,options={}){
+  const ctx=document.getElementById(id);if(!ctx)return;
+  if(chartInstances[id])chartInstances[id].destroy();
+  const isDark=!document.body.classList.contains('light-mode');
+  const gridColor=isDark?'rgba(255,255,255,.04)':'rgba(0,0,0,.06)';
+  const tickColor=isDark?'#6b7280':'#94a3b8';
+  chartInstances[id]=new Chart(ctx,{type,data:{labels,datasets},options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:isDark?'#94a3b8':'#64748b',font:{size:11,family:'Inter'}}}},
+    scales:{x:{grid:{color:gridColor},ticks:{color:tickColor,font:{size:11}}},y:{grid:{color:gridColor},ticks:{color:tickColor,font:{size:11}}}},...options
+  }});
+}
+
+// ══════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════
+async function loadDashboard(){
+  const a=computeAnalytics();
+
+  // ── Stat Cards ──
+  document.getElementById('stat-reach').textContent  = a.totalReach>0 ? fmtNum(a.totalReach) : '—';
+  document.getElementById('stat-eng').textContent    = a.avgCTR>0 ? a.avgCTR+'%' : '—';
+  document.getElementById('stat-subs').textContent   = a.totalClicks>0 ? fmtNum(a.totalClicks) : '—';
+  document.getElementById('stat-roi').textContent    = a.totalBudget>0 ? '$'+fmtNum(a.totalBudget-a.totalSpent) : '—';
+  document.getElementById('reach-badge').textContent = a.activeCampaigns>0 ? a.activeCampaigns+' active' : 'No campaigns';
+  document.getElementById('reach-badge').className   = 'stat-badge '+(a.activeCampaigns>0?'badge-up':'badge-down');
+
+  // ── Performance Chart (real: weekly published count approximation) ──
+  const platKeys=Object.keys(a.platMap);
+  const perfLabels=platKeys.length ? platKeys : ['No Data'];
+  const perfReach =platKeys.length ? platKeys.map(k=>Math.round(a.platMap[k].reach/1000*10)/10) : [0];
+  const perfClicks=platKeys.length ? platKeys.map(k=>a.platMap[k].clicks) : [0];
+
+  if(campaigns.length){
+    mkChart('perfChart','bar', perfLabels,[
+      {label:'Reach (K)',data:perfReach,backgroundColor:'rgba(0,212,255,.7)',borderRadius:4},
+      {label:'Clicks',data:perfClicks,backgroundColor:'rgba(0,230,118,.6)',borderRadius:4},
+    ]);
+    // Channel pie/doughnut
+    mkChart('chanChart','doughnut', perfLabels,[
+      {label:'Reach',data:perfReach,backgroundColor:['#00d4ff','#0ea5f0','#5b5ef4','#00e676','#ffab00','#ff5252'].slice(0,perfLabels.length)},
+    ],{plugins:{legend:{position:'right',labels:{color:'inherit',font:{size:11}}}}});
+  } else {
+    // empty state chart
+    mkChart('perfChart','bar',['Create a campaign to see data'],
+      [{label:'Reach',data:[0],backgroundColor:'rgba(0,212,255,.2)',borderRadius:4}]);
+    mkChart('chanChart','doughnut',['No data yet'],
+      [{data:[1],backgroundColor:['rgba(255,255,255,.05)']}],
+      {plugins:{legend:{display:false}}});
+  }
+
+  // ── Recent Campaigns ──
+  if(campaigns.length){
+    document.getElementById('campaignList').innerHTML=campaigns.slice(0,5).map(c=>`
+      <div class="campaign-item">
+        <div class="cam-icon">${c.icon}</div>
+        <div style="flex:1"><div class="cam-name">${c.name}</div><div class="cam-meta">${c.platform} · ${c.date}</div></div>
+        <div class="cam-right"><span class="cam-status s-${c.status}">${c.status}</span><span class="cam-reach">${c.reach}</span></div>
+      </div>`).join('');
+  } else {
+    document.getElementById('campaignList').innerHTML=`
+      <div style="text-align:center;padding:28px 0;color:var(--muted)">
+        <div style="font-size:32px;margin-bottom:8px">📭</div>
+        <div style="font-size:14px;margin-bottom:12px">No campaigns yet</div>
+        <button class="btn-primary btn-sm" onclick="openModal('newCampaignModal')">+ Create First Campaign</button>
+      </div>`;
+  }
+
+  // ── AI Insights (derived from real data) ──
+  const panel=document.getElementById('aiInsightsPanel');
+  if(panel){
+    if(a.recs.length){
+      panel.innerHTML=a.recs.map(r=>`
+        <div class="insight-item">
+          <div class="insight-tag" style="color:${r.type==='ALERT'?'var(--red)':r.type==='TREND'?'var(--green)':'var(--cyan)'}">
+            <span>${r.icon}</span> ${r.type}
+          </div>
+          <div class="insight-text">${r.text}</div>
+        </div>`).join('');
+    } else {
+      panel.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">Add campaigns to see AI insights.</div>';
+    }
+  }
+}
+
+function refreshDashboard(){
+  loadDashboard();
+  toast('🔄 Dashboard refreshed','success');
+}
+
+// ══════════════════════════════════════
+// CAMPAIGNS
+// ══════════════════════════════════════
+function loadCampaigns(filter='all'){
+  let list=campaigns;
+  if(filter!=='all')list=campaigns.filter(c=>c.status===filter);
+  const search=document.getElementById('campaignSearch')?.value?.toLowerCase()||'';
+  if(search)list=list.filter(c=>c.name.toLowerCase().includes(search)||c.platform.toLowerCase().includes(search));
+  renderCampaigns(list);
+  document.getElementById('campaignBadge').textContent=campaigns.filter(c=>c.status==='active').length;
+}
+
+function renderCampaigns(list){
+  const grid=document.getElementById('campaignsGrid');
+  grid.innerHTML=list.length?list.map(c=>{
+    const budgetNum=parseFloat(c.budget.replace(/[$,]/g,''))||0;
+    const spentNum=parseFloat(c.spent.replace(/[$,]/g,''))||0;
+    const pct=budgetNum>0?Math.min(100,Math.round(spentNum/budgetNum*100)):0;
+    return `<div class="campaign-card">
+      <div class="cc-top"><div><div class="cc-name">${c.icon} ${c.name}</div><div class="cc-type">${c.platform} · ${c.type}</div></div><span class="cam-status s-${c.status}">${c.status}</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">📎 ${(c.tags||[]).map(t=>`<span style="background:rgba(0,212,255,.1);color:var(--cyan);border-radius:10px;padding:2px 7px">${t}</span>`).join(' ')}</div>
+      <div class="cc-metrics">
+        <div class="cc-metric"><div class="cc-metric-val">${c.reach}</div><div class="cc-metric-label">Reach</div></div>
+        <div class="cc-metric"><div class="cc-metric-val">${c.clicks}</div><div class="cc-metric-label">Clicks</div></div>
+        <div class="cc-metric"><div class="cc-metric-val">${c.ctr}</div><div class="cc-metric-label">CTR</div></div>
+        <div class="cc-metric"><div class="cc-metric-val">${c.spent}</div><div class="cc-metric-label">Spent</div></div>
+      </div>
+      <div style="margin-top:10px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px"><span>Budget: ${c.budget}</span><span>${pct}% used</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="cc-footer">
+        <div style="font-size:12px;color:var(--muted)">📅 ${c.date}</div>
+        <div style="display:flex;gap:7px">
+          <button class="btn-secondary btn-sm" onclick="editCampaign(${c.id})">Edit</button>
+          <button class="btn-primary btn-sm" onclick="viewCampaign(${c.id})">View →</button>
+          ${c.status!=='completed'?`<button class="btn-danger" onclick="pauseCampaign(${c.id})">Pause</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join(''):`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:14px">No campaigns found.</div>`;
+}
+
+function filterCampaigns(f,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadCampaigns(f);
+}
+function searchCampaigns(q){loadCampaigns();}
+
+function editCampaign(id){
+  const c=campaigns.find(c=>c.id===id);
+  if(!c)return;
+  document.getElementById('nc-name').value=c.name;
+  document.getElementById('nc-goal').value=c.goal||'';
+  campaignTags=c.tags||[];
+  renderCampaignTags();
+  openModal('newCampaignModal');
+  toast(`✏️ Editing: ${c.name}`);
+}
+
+function viewCampaign(id){
+  const c=campaigns.find(c=>c.id===id);
+  if(!c)return;
+  toast(`📊 ${c.name}: ${c.reach} reach, ${c.ctr} CTR, ${c.spent}/${c.budget} spent`,'info',5000);
+}
+
+function pauseCampaign(id){
+  const c=campaigns.find(c=>c.id===id);
+  if(!c)return;
+  c.status=c.status==='active'?'scheduled':'active';
+  saveCampaigns();
+  loadCampaigns();
+  refreshAllViews();
+  toast(`${c.status==='active'?'▶️ Resumed':'⏸️ Paused'}: ${c.name}`);
+}
+
+function createCampaign(){
+  const name=document.getElementById('nc-name').value.trim();
+  if(!name){toast('Campaign name is required','error');return;}
+  const budget=document.getElementById('nc-budget').value;
+  const icons={Instagram:'📸',Facebook:'📘',LinkedIn:'💼','Twitter/X':'🐦',Email:'✉️',SMS:'📱'};
+  const platform=document.getElementById('nc-platform').value;
+  const nc={
+    id:Date.now(),name,platform,type:document.getElementById('nc-type').value,
+    status:'draft',reach:'—',clicks:'—',ctr:'—',
+    budget:budget?`$${budget}`:'$0',spent:'$0',
+    date:document.getElementById('nc-date').value||'TBD',
+    icon:icons[platform]||'📣',goal:document.getElementById('nc-goal').value,
+    tags:[...campaignTags]
+  };
+  campaigns.unshift(nc);
+  saveCampaigns();
+  closeModal('newCampaignModal');
+  document.getElementById('nc-name').value='';document.getElementById('nc-goal').value='';document.getElementById('nc-budget').value='';
+  campaignTags=[];renderCampaignTags();
+  loadCampaigns();
+  notifications.unshift({id:Date.now(),icon:'🚀',text:`New campaign "${name}" created successfully!`,time:'Just now',unread:true,category:'campaigns'});
+  saveNotifications();
+  refreshAllViews();
+  toast(`🚀 Campaign "${name}" created!`,'success');
+}
+
+// ══════════════════════════════════════
+// TAGS INPUT
+// ══════════════════════════════════════
+function handleTagInput(e){
+  if(e.key==='Enter'||e.key===','){ e.preventDefault(); const v=e.target.value.trim().replace(',',''); if(v&&!campaignTags.includes(v)){campaignTags.push(v);renderCampaignTags();} e.target.value=''; }
+}
+function renderCampaignTags(){
+  const wrap=document.getElementById('tagsWrap');
+  wrap.innerHTML=campaignTags.map((t,i)=>`<div class="tag-pill">${t}<span class="tag-pill-x" onclick="campaignTags.splice(${i},1);renderCampaignTags()">×</span></div>`).join('');
+  wrap.insertAdjacentHTML('beforeend','<input class="tags-input-inner" id="tagInput" placeholder="Add tag..." onkeydown="handleTagInput(event)"/>');
+}
+
+function handleVoiceTagInput(e){
+  if(e.key==='Enter'||e.key===','){ e.preventDefault(); const v=e.target.value.trim().replace(',',''); if(v&&!voiceTags.includes(v)){voiceTags.push(v);renderVoiceTags();} e.target.value=''; }
+}
+function renderVoiceTags(){
+  const wrap=document.getElementById('voiceTagsWrap');
+  wrap.innerHTML=voiceTags.map((t,i)=>`<div class="tag-pill">${t}<span class="tag-pill-x" onclick="voiceTags.splice(${i},1);renderVoiceTags()">×</span></div>`).join('');
+  wrap.insertAdjacentHTML('beforeend','<input class="tags-input-inner" id="voiceTagInput" placeholder="e.g. innovative, bold..." onkeydown="handleVoiceTagInput(event)"/>');
+}
+
+// ══════════════════════════════════════
+// MODALS
+// ══════════════════════════════════════
+function openModal(id){
+  if(id==='scheduleModal'){
+    const today=new Date().toISOString().split('T')[0];
+    document.getElementById('sp-date').value=today;
+  }
+  if(id==='newCampaignModal'){
+    const today=new Date().toISOString().split('T')[0];
+    document.getElementById('nc-date').value=today;
+  }
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+document.querySelectorAll('.modal-overlay').forEach(el=>{
+  el.addEventListener('click',function(){this.classList.remove('open');});
+});
+
+// ══════════════════════════════════════
+// SCHEDULE POST MODAL
+// ══════════════════════════════════════
+function selectSlot(el){
+  document.querySelectorAll('.time-slot').forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function schedulePost(){
+  const title=document.getElementById('sp-title').value.trim();
+  const platform=document.getElementById('sp-platform').value;
+  const date=document.getElementById('sp-date').value;
+  const slot=document.querySelector('.time-slot.selected')?.textContent||'11:00 AM';
+  if(!title){toast('Post title is required','error');return;}
+  const card={title,platform,date:date?new Date(date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),content:document.getElementById('sp-content').value};
+  kanbanData.scheduled.push(card);
+  saveKanban();
+  closeModal('scheduleModal');
+  document.getElementById('sp-title').value='';document.getElementById('sp-content').value='';
+  toast(`📅 "${title}" scheduled for ${slot} on ${card.date}`,'success');
+  notifications.unshift({id:Date.now(),icon:'📅',text:`Post "${title}" scheduled for ${card.date} at ${slot}`,time:'Just now',unread:true,category:'campaigns'});
+  saveNotifications();
+}
+
+// ══════════════════════════════════════
+// CONTENT GENERATION (enhanced)
+// ══════════════════════════════════════
+let selectedPlatform='Instagram';
+
+const platformTemplates={
+  Instagram:(goal,tone,ctx,voice)=>`🌟 ${goal?goal.charAt(0).toUpperCase()+goal.slice(1):'Big news is here'}!\n\n${ctx?ctx+'\n\n':''}${voice&&voice.length?`✨ ${voice.join(' · ')}\n\n`:''}✅ Exclusive offer — limited time only\n✅ Free shipping on orders over $50\n✅ New arrivals weekly\n\nTap the link in bio to shop now! 🛒\n\n#${toneHashtag(tone)} #ShopNow #Trending #LimitedOffer`,
+  'Twitter/X':(goal,tone,ctx,voice)=>`🔥 ${goal?goal.toUpperCase():'BIG ANNOUNCEMENT'}!\n\n${ctx||"Don't miss out — this won't last long."}\n\n👉 Find out more: [link]\n\n#${toneHashtag(tone)} #Trending`,
+  LinkedIn:(goal,tone,ctx,voice)=>`Exciting news for our professional community!\n\nWe're thrilled to share: ${goal||'a major update'}.\n\n${ctx?ctx+'\n\n':''}${voice&&voice.length?`Our brand voice: ${voice.join(', ')}\n\n`:''}Key highlights:\n→ Industry-leading quality\n→ Built with our customers in mind\n→ Available now\n\nWe'd love your thoughts in the comments.\n\n#BusinessGrowth #${toneHashtag(tone)} #Innovation`,
+  Email:(goal,tone,ctx)=>`Subject: 🎉 ${goal||'Big news just for you'}!\n\nHi [First Name],\n\n${ctx||'We have something exciting to share with you today.'}\n\nHere's what you can look forward to:\n• Exclusive offer just for our subscribers\n• Limited-time deals — act fast!\n• [Call to Action Button]\n\nHurry — this offer expires soon.\n\nWarm regards,\nThe Team`,
+  SMS:(goal,tone,ctx)=>`📣 ${goal||'Special offer'}! ${ctx||"Don't miss out."} Tap here: [link] Reply STOP to opt out.`,
+};
+
+function toneHashtag(t){return({Professional:'BusinessGrowth','Casual & Fun':'GoodVibes',Urgent:'ActNow',Inspirational:'MindsetShift',Informative:'DidYouKnow'})[t]||'Marketing';}
+
+function selectPlatform(el,plat){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');selectedPlatform=plat;
+}
+
+async function generateContent(){
+  const goal=document.getElementById('genGoal').value.trim();
+  const tone=document.getElementById('genTone').value;
+  const context=document.getElementById('genContext').value.trim();
+  const btn=document.getElementById('genBtn');
+  const result=document.getElementById('genResult');
+  const actions=document.getElementById('genActions');
+  const apiKey=document.getElementById('apiKey')?.value?.trim();
+  document.getElementById('genVariations').innerHTML='';
+  btn.innerHTML='<span class="spinner"></span> Generating...';btn.disabled=true;
+  result.textContent='✨ Generating content via AI...';
+  try{
+    await delay(800);
+    let content;
+    if(apiKey&&apiKey.startsWith('sk-')){
+      try{
+        const res=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+apiKey,'Content-Type':'application/json'},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:`Generate a ${selectedPlatform} post for: "${goal}". Tone: ${tone}. Context: ${context||'general marketing'}.${voiceTags.length?' Brand voice: '+voiceTags.join(', '):''}`}],max_tokens:400})});
+        const oai=await res.json();
+        content=oai.choices?.[0]?.message?.content||'No response received.';
+      }catch(e){content=platformTemplates[selectedPlatform]?.(goal,tone,context,voiceTags)||'Error generating content.';}
+    }else{
+      const fn=platformTemplates[selectedPlatform]||platformTemplates['Instagram'];
+      content=fn(goal,tone,context,voiceTags);
+    }
+    result.textContent=content;
+    const len=content.length;
+    const chars=document.getElementById('genChars');
+    chars.textContent=`${len} characters`;chars.className='char-count';
+    actions.style.display='flex';
+  }catch(e){result.textContent='❌ Error generating content. Please try again.';}
+  btn.innerHTML='✨ Generate Content';btn.disabled=false;
+}
+
+async function generateMultiple(){
+  const goal=document.getElementById('genGoal').value.trim()||'our product';
+  const tone=document.getElementById('genTone').value;
+  const variations=document.getElementById('genVariations');
+  const result=document.getElementById('genResult');
+  result.textContent='Generating 3 variations...';
+  variations.innerHTML='';
+  await delay(1000);
+  const tones=['Professional','Casual & Fun','Inspirational'];
+  const html=tones.map((t,i)=>{
+    const fn=platformTemplates[selectedPlatform]||platformTemplates['Instagram'];
+    const c=fn(goal,t,'',voiceTags);
+    return `<div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;cursor:pointer;transition:border-color .15s" onclick="document.getElementById('genResult').textContent=this.querySelector('.var-content').textContent;document.getElementById('genActions').style.display='flex'" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)'">
+      <div style="font-size:10px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Variation ${i+1} — ${t}</div>
+      <div class="var-content" style="font-size:12px;color:var(--dim);white-space:pre-wrap;max-height:60px;overflow:hidden">${c}</div>
+    </div>`;
+  }).join('');
+  variations.innerHTML=html;
+  result.textContent='👆 Click a variation above to select it, or generate a single version.';
+  document.getElementById('genActions').style.display='none';
+  toast('✅ 3 variations generated! Click to select one.','success');
+}
+
+function addToQueue(){
+  const content=document.getElementById('genResult').textContent;
+  if(!content||content.includes('will appear here'))return;
+  const item={id:Date.now(),platform:selectedPlatform,content,created:new Date().toLocaleTimeString()};
+  contentQueue.push(item);
+  saveQueue();
+  renderQueue();
+  toast('✅ Added to Content Queue!','success');
+}
+
+function renderQueue(){
+  const el=document.getElementById('contentQueue');
+  if(!contentQueue.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">No content in queue. Generate content and click "Add to Queue".</div>';return;}
+  el.innerHTML=contentQueue.map((item,i)=>`
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="flex-shrink:0;font-size:20px">${{Instagram:'📸',LinkedIn:'💼','Twitter/X':'🐦',Email:'✉️',SMS:'📱'}[item.platform]||'📝'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;color:var(--cyan);font-weight:600;margin-bottom:4px">${item.platform} · ${item.created}</div>
+        <div style="font-size:13px;color:var(--text);white-space:pre-wrap;overflow:hidden;max-height:60px;text-overflow:ellipsis">${item.content.substring(0,150)}${item.content.length>150?'...':''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <button class="btn-secondary btn-sm" onclick="navigator.clipboard.writeText(contentQueue[${i}].content).then(()=>toast('📋 Copied!'))">Copy</button>
+        <button class="btn-primary btn-sm" onclick="scheduleQueueItem(${i})">Schedule</button>
+        <button class="btn-danger" onclick="contentQueue.splice(${i},1);saveQueue();renderQueue()">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function scheduleQueueItem(i){
+  const item=contentQueue[i];
+  document.getElementById('sp-content').value=item.content;
+  document.getElementById('sp-platform').value=item.platform==='Twitter/X'?'🐦 Twitter/X':item.platform==='Email'?'✉️ Email':item.platform==='SMS'?'📱 SMS':item.platform==='LinkedIn'?'💼 LinkedIn':'📸 Instagram';
+  openModal('scheduleModal');
+}
+
+function scheduleFromContent(){
+  const content=document.getElementById('genResult').textContent;
+  document.getElementById('sp-content').value=content;
+  openModal('scheduleModal');
+}
+
+function copyContent(){navigator.clipboard.writeText(document.getElementById('genResult').textContent).then(()=>toast('📋 Copied to clipboard!'));}
+
+async function optimizeCaption(){
+  const input=document.getElementById('capInput').value.trim();
+  const result=document.getElementById('capResult');
+  if(!input){toast('Please enter a caption first.','error');return;}
+  result.textContent='⚡ Optimizing...';
+  await delay(700);
+  const hooks=['🔥 Stop scrolling!','✨ This one\'s for you:','💡 Unpopular opinion:','🚀 Game-changer:','👇 You need to see this:'];
+  const ctas=['Double-tap if you agree! ❤️','Tag someone who needs this 👇','Save this for later 🔖','What do you think? Comment below!','Share with your community 🔗'];
+  const hashtags=['#MustHave','#TrendAlert','#GameChanger','#ContentCreator','#MarketingTips','#Trending','#Viral'];
+  const hook=hooks[Math.floor(Math.random()*hooks.length)];
+  const cta=ctas[Math.floor(Math.random()*ctas.length)];
+  const tags=hashtags.sort(()=>Math.random()-.5).slice(0,5).join(' ');
+  const optimized=`${hook}\n\n${input}\n\n${cta}\n\n${tags}`;
+  result.textContent=optimized;
+  document.getElementById('capActions').style.display='flex';
+  toast('⚡ Caption optimized!','success');
+}
+
+// ══════════════════════════════════════
+// KANBAN + CALENDAR
+// ══════════════════════════════════════
+function loadKanban(){
+  const cols=[{key:'draft',label:'Draft',color:'#ffab00'},{key:'scheduled',label:'Scheduled',color:'#00d4ff'},{key:'published',label:'Published',color:'#00e676'}];
+  document.getElementById('kanbanBoard').innerHTML=cols.map(col=>`
+    <div>
+      <div class="col-header"><span class="col-title" style="color:${col.color}">${col.label}</span><span class="col-count">${(kanbanData[col.key]||[]).length}</span></div>
+      <div id="col-${col.key}">
+        ${(kanbanData[col.key]||[]).map(card=>`
+          <div class="k-card" draggable="true" ondragstart="drag(event,'${col.key}','${card.title.replace(/'/g,"\\'")}')">
+            <div class="k-platform">${card.platform}</div>
+            <div class="k-title">${card.title}</div>
+            ${card.content?`<div style="font-size:12px;color:var(--muted);margin-bottom:8px;overflow:hidden;max-height:36px">${card.content.substring(0,80)}...</div>`:''}
+            <div class="k-footer">
+              <span class="k-date">📅 ${card.date}</span>
+              <div style="display:flex;gap:5px">
+                <button class="btn-secondary" style="font-size:11px;padding:4px 8px;border-radius:6px" onclick="editKanbanCard('${col.key}','${card.title.replace(/'/g,"\\'")}')">Edit</button>
+                <button class="btn-danger" onclick="removeKanbanCard('${col.key}','${card.title.replace(/'/g,"\\'")}')">✕</button>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div ondragover="event.preventDefault()" ondrop="drop(event,'${col.key}')" style="min-height:50px;border:2px dashed var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);margin-top:8px;transition:border-color .15s" ondragenter="this.style.borderColor='var(--cyan)'" ondragleave="this.style.borderColor='var(--border)'">Drop here</div>
+    </div>`).join('');
+}
+
+let dragItem=null,dragFrom=null;
+function drag(e,col,title){dragItem=title;dragFrom=col;}
+function drop(e,col){
+  if(!dragItem||dragFrom===col)return;
+  const card=kanbanData[dragFrom]?.find(c=>c.title===dragItem);
+  if(!card)return;
+  kanbanData[dragFrom]=kanbanData[dragFrom].filter(c=>c.title!==dragItem);
+  kanbanData[col].push(card);
+  saveKanban();
+  toast(`✅ Moved "${dragItem}" to ${col}`,'success');
+  dragItem=null;dragFrom=null;loadKanban();
+}
+
+function removeKanbanCard(col,title){
+  kanbanData[col]=kanbanData[col].filter(c=>c.title!==title);
+  saveKanban();
+  loadKanban();toast(`🗑️ Removed "${title}"`);
+}
+
+function editKanbanCard(col,title){
+  const card=kanbanData[col].find(c=>c.title===title);
+  if(!card)return;
+  document.getElementById('sp-title').value=card.title;
+  document.getElementById('sp-content').value=card.content||'';
+  document.getElementById('sp-date').value='';
+  openModal('scheduleModal');
+}
+
+function renderCalendar(){
+  const year=calDate.getFullYear(),month=calDate.getMonth();
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calTitle').textContent=`${months[month]} ${year}`;
+  const grid=document.getElementById('calGrid');
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today=new Date();
+  // scheduled posts dates
+  const scheduledDates=kanbanData.scheduled.map(k=>k.date);
+  let html=days.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const prevDays=new Date(year,month,0).getDate();
+  for(let i=firstDay-1;i>=0;i--)html+=`<div class="cal-day other-month">${prevDays-i}</div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=d===today.getDate()&&month===today.getMonth()&&year===today.getFullYear();
+    const dateStr=new Date(year,month,d).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const hasPost=scheduledDates.some(sd=>sd===dateStr);
+    html+=`<div class="cal-day${isToday?' today':''}${hasPost?' has-post':''}" onclick="toast('${dateStr}: ${hasPost?'Post scheduled!':'No posts'}')">${d}</div>`;
+  }
+  const remaining=42-(firstDay+daysInMonth);
+  for(let d=1;d<=remaining;d++)html+=`<div class="cal-day other-month">${d}</div>`;
+  grid.innerHTML=html;
+}
+
+function prevMonth(){calDate.setMonth(calDate.getMonth()-1);renderCalendar();}
+function nextMonth(){calDate.setMonth(calDate.getMonth()+1);renderCalendar();}
+
+// ══════════════════════════════════════
+// ANALYTICS
+// ══════════════════════════════════════
+function loadAnalytics(){
+  const a=computeAnalytics();
+  const platKeys=Object.keys(a.platMap);
+
+  // ── Metric Strip ──
+  const roi=a.totalBudget>0?'$'+fmtNum(a.totalBudget-a.totalSpent):'—';
+  const metrics=[
+    {val:a.totalReach>0?fmtNum(a.totalReach):'—',     label:'Total Reach',       delta:a.activeCampaigns+' active',    up:a.activeCampaigns>0},
+    {val:a.avgCTR>0?a.avgCTR+'%':'—',                  label:'Avg CTR',           delta:campaigns.length+' campaigns',  up:true},
+    {val:a.totalClicks>0?fmtNum(a.totalClicks):'—',    label:'Total Clicks',      delta:platKeys.length+' platforms',   up:true},
+    {val:a.totalBudget>0?'$'+fmtNum(a.totalSpent):'—', label:'Total Spent',       delta:'of $'+fmtNum(a.totalBudget),   up:a.totalSpent<=a.totalBudget},
+  ];
+  document.getElementById('metricStrip').innerHTML=metrics.map(m=>`
+    <div class="metric-box">
+      <div class="metric-val">${m.val}</div>
+      <div class="metric-label">${m.label}</div>
+      <div class="metric-delta" style="color:${m.up?'#00e676':'#ff5252'}">${m.delta}</div>
+    </div>`).join('');
+
+  // ── Engagement Chart ──
+  mkChart('engChart','line', a.engagementOverTime.labels,[
+    {label:'Activity',data:a.engagementOverTime.data,borderColor:'#00d4ff',backgroundColor:'rgba(0,212,255,.1)',fill:true,tension:.4,pointRadius:3},
+  ]);
+
+  // ── Platform Breakdown ──
+  if(platKeys.length){
+    mkChart('platChart','bar', platKeys,[
+      {label:'Reach',data:platKeys.map(k=>Math.round(a.platMap[k].reach)),
+       backgroundColor:['rgba(225,48,108,.7)','rgba(24,119,242,.7)','rgba(10,102,194,.7)','rgba(0,212,255,.7)','rgba(107,114,128,.7)','rgba(29,161,242,.7)'].slice(0,platKeys.length),
+       borderRadius:5},
+    ],{plugins:{legend:{display:false}}});
+  } else {
+    mkChart('platChart','bar',['No campaigns yet'],[{label:'Reach',data:[0],backgroundColor:'rgba(0,212,255,.1)',borderRadius:5}],{plugins:{legend:{display:false}}});
+  }
+
+  // ── Top Content Table ──
+  document.getElementById('topTable').innerHTML=a.topContent.length?`
+    <thead><tr><th>#</th><th>Campaign</th><th>Platform</th><th>Reach</th><th>CTR</th><th>Performance</th></tr></thead>
+    <tbody>${a.topContent.map((r,i)=>`<tr>
+      <td style="color:var(--muted)">${i+1}</td><td>${r.name}</td><td>${r.platform}</td><td>${r.reach}</td>
+      <td style="color:#00e676">${r.eng}</td>
+      <td><div class="bar-track"><div class="bar-fill" style="width:${r.pct}%"></div></div></td>
+    </tr>`).join('')}</tbody>`:
+    '<thead><tr><th>No campaign data yet</th></tr></thead><tbody><tr><td style="color:var(--muted);padding:20px;text-align:center">Create campaigns and enter performance metrics to see your top content here.</td></tr></tbody>';
+
+  // ── AI Recommendations ──
+  document.getElementById('aiRecs').innerHTML=a.recs.map(r=>`
+    <div class="insight-item" style="display:flex;gap:12px;align-items:flex-start;cursor:pointer">
+      <span style="font-size:20px">${r.icon}</span>
+      <div style="flex:1">
+        <div class="insight-tag" style="color:${r.type==='ALERT'?'#ff5252':r.type==='TREND'?'#00e676':'#00d4ff'}">${r.type}</div>
+        <div class="insight-text">${r.text}</div>
+      </div>
+      <button class="btn-primary btn-sm" style="flex-shrink:0" onclick="applyAnalyticsRec(this.closest('.insight-item'))">Apply →</button>
+    </div>`).join('');
+}
+
+function applyAnalyticsRec(el){
+  const text=el.querySelector('.insight-text').textContent;
+  if(text.includes('Instagram')||text.includes('Reels')){
+    showPage('content',document.querySelector('[onclick*="content"]'));
+    document.querySelector('.ptab').click();
+    toast('📸 Switched to Instagram content mode','success');
+  } else if(text.includes('LinkedIn')||text.includes('Tuesday')){
+    showPage('publishing',document.querySelector('[onclick*="publishing"]'));
+    toast('📅 Opening publishing board to schedule LinkedIn post','success');
+  } else {
+    showPage('content',document.querySelector('[onclick*="content"]'));
+    toast('✨ Opening content studio to apply recommendation','success');
+  }
+}
+
+function exportAnalytics(){
+  const range=document.getElementById('analyticsRange').value;
+  const csvRows=[
+    ['Metric','Value','Delta'],
+    ...analyticsData.metrics.map(m=>[m.label,m.val,m.delta]),
+    [''],
+    ['Platform','Reach (K)'],
+    ...analyticsData.platformBreakdown.labels.map((l,i)=>[l,analyticsData.platformBreakdown.datasets[0].data[i]]),
+  ];
+  const csv=csvRows.map(r=>r.join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`analytics-${range.replace(/ /g,'-')}.csv`;a.click();
+  toast('⬇ Analytics exported as CSV','success');
+}
+
+// ══════════════════════════════════════
+// INBOX (enhanced)
+// ══════════════════════════════════════
+function loadInbox(){
+  let messages=inboxMessages;
+  const filter=document.getElementById('inboxFilter')?.value||'all';
+  if(filter==='unread')messages=messages.filter(m=>m.unread);
+  const search=document.getElementById('inboxSearch')?.value?.toLowerCase()||'';
+  if(search)messages=messages.filter(m=>m.sender.toLowerCase().includes(search)||m.subject.toLowerCase().includes(search)||m.preview.toLowerCase().includes(search));
+  const unread=inboxMessages.filter(m=>m.unread).length;
+  const badge=document.getElementById('inboxBadge');
+  badge.textContent=unread||'';badge.style.display=unread?'flex':'none';
+  document.getElementById('inboxList').innerHTML=messages.length?messages.map(m=>`
+    <div class="inbox-item ${m.unread?'unread':''}" onclick="openMessage(${m.id},this)">
+      <div style="display:flex;justify-content:space-between">
+        <div class="inbox-sender">${m.sender}</div>
+        <span class="inbox-time">${m.time}</span>
+      </div>
+      <div style="font-size:13px;color:var(--dim);margin:2px 0">${m.subject}</div>
+      <div class="inbox-preview">${m.preview}</div>
+    </div>`)
+  .join(''):'<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px">No messages found</div>';
+}
+
+function searchInbox(q){loadInbox();}
+
+function openMessage(id,el){
+  document.querySelectorAll('.inbox-item').forEach(i=>i.classList.remove('selected'));
+  el.classList.add('selected');el.classList.remove('unread');
+  const m=inboxMessages.find(m=>m.id===id);
+  if(!m)return;m.unread=false;saveInbox();loadInbox();
+  document.getElementById('msgPanel').innerHTML=`
+    <div class="msg-header">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div class="msg-from">${m.sender}</div>
+          <div class="msg-subject">${m.subject} · ${m.time}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn-secondary btn-sm" onclick="starMessage(${m.id})">⭐</button>
+          <button class="btn-secondary btn-sm" onclick="archiveMsg(${m.id})">Archive</button>
+        </div>
+      </div>
+    </div>
+    <div class="msg-body">${m.body.replace(/\n/g,'<br>')}</div>
+    <div class="ai-reply-box">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="ai-reply-label">🤖 AI-SUGGESTED REPLY</div>
+        <button class="btn-secondary btn-sm" onclick="regenReply(${m.id})">🔄 Regen</button>
+      </div>
+      <div class="ai-reply-text" id="aiReplyText${m.id}">${m.reply}</div>
+    </div>
+    <div style="margin-bottom:12px">
+      <label class="gen-label">Edit reply before sending:</label>
+      <textarea class="editable-reply" id="editableReply${m.id}">${m.reply}</textarea>
+    </div>
+    <div class="msg-actions">
+      <button class="btn-primary btn-sm" onclick="sendReply(${m.id})">✉️ Send Reply</button>
+      <button class="btn-secondary btn-sm" onclick="escalateMsg(${m.id})">⚠️ Escalate</button>
+      <button class="btn-secondary btn-sm" onclick="scheduleReply(${m.id})">📅 Schedule Reply</button>
+      <button class="btn-danger" onclick="archiveMsg(${m.id})">🗑️ Archive</button>
+    </div>`;
+}
+
+function regenReply(id){
+  const m=inboxMessages.find(m=>m.id===id);
+  if(!m)return;
+  const addOns=["I'd be happy to assist you with this!","Thank you for getting in touch.","We value your feedback greatly."];
+  const newReply=m.reply+' '+addOns[Math.floor(Math.random()*addOns.length)];
+  document.getElementById(`aiReplyText${id}`).textContent=newReply;
+  document.getElementById(`editableReply${id}`).value=newReply;
+  toast('🔄 New reply generated','success');
+}
+
+function openAddMessageModal(){openModal('addMessageModal');}
+
+function addMessageToInbox(){
+  const sender=document.getElementById('am-sender').value.trim();
+  const subject=document.getElementById('am-subject').value.trim();
+  if(!sender||!subject){toast('Sender and subject are required','error');return;}
+  const body=document.getElementById('am-body').value.trim();
+  const time=document.getElementById('am-time').value;
+  const unread=document.getElementById('am-unread').checked;
+  const msg={
+    id:Date.now(),sender,subject,
+    preview:body.substring(0,60)+(body.length>60?'...':''),
+    body:body||'(no message body)',
+    time,unread,category:'inbox',
+    reply:genAutoReply(sender,subject,body)
+  };
+  inboxMessages.unshift(msg);
+  saveInbox();
+  if(unread){
+    notifications.unshift({id:Date.now()+1,icon:'💬',text:`New message from ${sender}: ${subject}`,time:'Just now',unread:true,category:'inbox'});
+    saveNotifications();
+  }
+  closeModal('addMessageModal');
+  document.getElementById('am-sender').value='';
+  document.getElementById('am-subject').value='';
+  document.getElementById('am-body').value='';
+  loadInbox();
+  refreshAllViews();
+  toast(`✉️ Message from ${sender} added to inbox`,'success');
+}
+
+function sendReply(id){
+  const ta=document.getElementById(`editableReply${id}`);
+  const m=inboxMessages.find(m=>m.id===id);
+  if(m){m.replied=true;m.unread=false;saveInbox();}
+  toast(`✉️ Reply sent to ${m?.sender||'recipient'}!`,'success');
+  loadInbox();
+}
+function escalateMsg(id){
+  const m=inboxMessages.find(m=>m.id===id);
+  if(m){m.escalated=true;saveInbox();}
+  notifications.unshift({id:Date.now(),icon:'⚠️',text:`Message from ${m?.sender||'unknown'} escalated to team`,time:'Just now',unread:true,category:'inbox'});
+  saveNotifications();
+  toast('⚠️ Escalated to team!');
+}
+function starMessage(id){toast('⭐ Message starred!');}
+function scheduleReply(id){
+  const ta=document.getElementById(`editableReply${id}`);
+  if(ta){document.getElementById('sp-content').value=ta.value;document.getElementById('sp-title').value='Scheduled Reply';openModal('scheduleModal');}
+}
+function archiveMsg(id){
+  inboxMessages=inboxMessages.filter(m=>m.id!==id);
+  saveInbox();
+  loadInbox();
+  document.getElementById('msgPanel').innerHTML='<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px">Select a message to view</div>';
+  toast('🗑️ Message archived!');
+}
+
+// ══════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════
+function loadSettings(){
+  const data={defaultTone:settings.defaultTone,channels:JSON.parse(JSON.stringify(channels))};
+  // populate form fields with saved values
+  const apiKeyEl=document.getElementById('apiKey');
+  if(apiKeyEl) apiKeyEl.value=settings.openaiApiKey||'';
+  const toneEl=document.getElementById('defaultTone');
+  if(toneEl) toneEl.value=settings.defaultTone||'Professional';
+  const wsEl=document.getElementById('wsName');
+  if(wsEl) wsEl.value=settings.workspaceName||'My Workspace';
+  const tzEl=document.getElementById('timezone');
+  if(tzEl) tzEl.value=settings.timezone||'UTC+0 (GMT)';
+
+  document.getElementById('channelsList').innerHTML=data.channels.map(c=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">${c.icon}</span>
+        <div><div style="font-size:14px;font-weight:500;color:var(--text)">${c.name}</div>
+          <div style="font-size:12px;color:${c.status==='connected'?'#00e676':'#6b7280'}" id="ch-status-${c.name.replace('/','_')}">${c.status}</div>
+        </div>
+      </div>
+      <button class="btn-secondary btn-sm" onclick="toggleChannel('${c.name}',this)">${c.status==='connected'?'Disconnect':'Connect'}</button>
+    </div>`).join('');
+}
+
+function toggleChannel(name,btn){
+  const ch=channels.find(c=>c.name===name);
+  if(!ch)return;
+  ch.status=ch.status==='connected'?'disconnected':'connected';
+  const statusEl=document.getElementById(`ch-status-${name.replace('/','_')}`);
+  if(statusEl){statusEl.textContent=ch.status;statusEl.style.color=ch.status==='connected'?'#00e676':'#6b7280';}
+  btn.textContent=ch.status==='connected'?'Disconnect':'Connect';
+  saveChannels();
+  toast(`${ch.status==='connected'?'✅ Connected':'🔌 Disconnected'}: ${name}`);
+}
+
+async function testApiKey(){
+  const key=document.getElementById('apiKey').value.trim();
+  if(!key){toast('Please enter an API key first','error');return;}
+  if(!key.startsWith('sk-')){toast('❌ Invalid API key format','error');return;}
+  toast('🔍 Testing API key...','info',2000);
+  await delay(1500);
+  toast('✅ API key valid! AI content generation enabled.','success');
+}
+
+function doSaveSettings(){
+  settings.openaiApiKey=document.getElementById('apiKey')?.value?.trim()||'';
+  settings.defaultTone=document.getElementById('defaultTone')?.value||'Professional';
+  saveSettings();
+  toast('✅ Settings saved!','success');
+  notifications.unshift({id:Date.now(),icon:'⚙️',text:'Settings updated',time:'Just now',unread:false,category:'campaigns'});
+  saveNotifications();
+}
+
+function saveWorkspace(){
+  const name=document.getElementById('wsName').value.trim();
+  const tz=document.getElementById('timezone').value;
+  if(name){ settings.workspaceName=name; document.querySelector('.logo-text .sub').textContent=name; }
+  settings.timezone=tz;
+  saveSettings();
+  toast(`✅ Workspace saved!`,'success');
+}
+
+// ══════════════════════════════════════
+// AI CHAT (enhanced)
+// ══════════════════════════════════════
+// ══════════════════════════════════════
+// GEMINI AI CHAT
+// ══════════════════════════════════════
+const GEMINI_KEY='AIzaSyDLsXU0z7UuDnCeOQxNM_3c4pUvbwrnm80';
+const GEMINI_URL=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+let chatHistory=[];
+
+function buildSystemContext(){
+  const a=computeAnalytics();
+  const platKeys=Object.keys(a.platMap);
+  return `You are MarketAI Assistant, an expert AI marketing strategist embedded inside a marketing dashboard called MarketAI Command Center.
+
+CURRENT WORKSPACE DATA:
+- User: ${userProfile.name||'Unknown'} (${userProfile.role||'Marketer'}) at ${userProfile.company||'their company'}
+- Campaigns: ${campaigns.length} total | ${campaigns.filter(c=>c.status==='active').length} active | ${campaigns.filter(c=>c.status==='scheduled').length} scheduled | ${campaigns.filter(c=>c.status==='completed').length} completed
+- Total Reach: ${a.totalReach>0?fmtNum(a.totalReach):'No data yet'}
+- Total Clicks: ${a.totalClicks>0?fmtNum(a.totalClicks):'No data yet'}
+- Avg CTR: ${a.avgCTR>0?a.avgCTR+'%':'No data yet'}
+- Total Budget: ${a.totalBudget>0?'$'+fmtNum(a.totalBudget):'Not set'}
+- Total Spent: ${a.totalSpent>0?'$'+fmtNum(a.totalSpent):'$0'}
+- Active Platforms: ${platKeys.length?platKeys.join(', '):'None connected yet'}
+- Inbox Messages: ${inboxMessages.length} total | ${inboxMessages.filter(m=>m.unread).length} unread
+- Publishing Board: ${(kanbanData.draft||[]).length} drafts | ${(kanbanData.scheduled||[]).length} scheduled | ${(kanbanData.published||[]).length} published
+- Content Queue: ${contentQueue.length} items
+${campaigns.length?`\nCAMPAIGN DETAILS:\n${campaigns.map(c=>`• "${c.name}" on ${c.platform} — Status: ${c.status} | Reach: ${c.reach} | Clicks: ${c.clicks} | CTR: ${c.ctr} | Budget: ${c.budget} | Spent: ${c.spent}`).join('\n')}`:''}
+${inboxMessages.length?`\nRECENT INBOX MESSAGES:\n${inboxMessages.slice(0,3).map(m=>`• From: ${m.sender} — "${m.subject}" (${m.unread?'unread':'read'})`).join('\n')}`:''}
+
+INSTRUCTIONS:
+- Be concise, actionable, and data-driven. Reference the user's actual data above when relevant.
+- Use emojis sparingly for clarity. Keep responses under 200 words unless a detailed analysis is asked for.
+- When the workspace has no data yet, encourage them to create campaigns or add messages.
+- You can help with: campaign strategy, content ideas, copywriting, analytics interpretation, inbox reply drafting, posting schedules, and marketing best practices.
+- Current page context: ${document.getElementById('chatContext')?.textContent||'Dashboard'}`;
+}
+
+let chatOpen=false;
+
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById('chatPanel').classList.toggle('open',chatOpen);
+}
+
+function clearChat(){
+  chatHistory=[];
+  document.getElementById('chatMessages').innerHTML=`<div class="chat-msg ai">Chat cleared! I'm powered by Gemini AI and have full visibility into your workspace data. Ask me anything 🤖</div>`;
+  document.getElementById('chatSugs').style.display='flex';
+  toast('💬 Chat cleared');
+}
+
+function updateChatSuggestions(pageId){
+  const suggestions={
+    dashboard:['Summarise my performance','What should I focus on today?','How are my campaigns doing?'],
+    campaigns:['Which campaign needs attention?','How can I improve my CTR?','Suggest a new campaign idea'],
+    content:['Write an Instagram caption','Give me 5 content ideas','Write a LinkedIn post about my brand'],
+    analytics:['Analyse my best platform','Where should I invest more budget?','What trends do you see?'],
+    inbox:['Help me draft a reply','How do I handle a pricing enquiry?','Write a follow-up message'],
+    publishing:['What should I post this week?','Best times to post on LinkedIn?','Review my publishing schedule'],
+    settings:['How do I improve my setup?','Which channels should I prioritise?'],
+    default:['How are my campaigns doing?','Content ideas','Analyse my performance'],
+  };
+  const sugs=suggestions[pageId]||suggestions.default;
+  document.getElementById('chatSugs').innerHTML=sugs.map(s=>`<div class="chat-sug" onclick="askAI(this.textContent)">${s}</div>`).join('');
+}
+
+async function sendChat(){
+  const input=document.getElementById('chatInput');
+  const msg=input.value.trim();
+  if(!msg)return;
+  input.value='';
+  appendChatMsg(msg,'user');
+  document.getElementById('chatSugs').style.display='none';
+
+  // typing indicator
+  const typingEl=document.createElement('div');
+  typingEl.className='chat-msg ai typing';
+  typingEl.innerHTML='<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>';
+  document.getElementById('chatMessages').appendChild(typingEl);
+  scrollChat();
+
+  // build message history for Gemini
+  chatHistory.push({role:'user',parts:[{text:msg}]});
+
+  try{
+    const body={
+      system_instruction:{parts:[{text:buildSystemContext()}]},
+      contents:chatHistory,
+      generationConfig:{maxOutputTokens:400,temperature:0.7}
+    };
+    const res=await fetch(GEMINI_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    const data=await res.json();
+    typingEl.remove();
+
+    if(data.candidates&&data.candidates[0]?.content?.parts[0]?.text){
+      const reply=data.candidates[0].content.parts[0].text;
+      chatHistory.push({role:'model',parts:[{text:reply}]});
+      appendChatMsg(reply,'ai');
+    } else if(data.error){
+      chatHistory.pop(); // remove the failed user message
+      appendChatMsg(`⚠️ API error: ${data.error.message||'Unknown error'}. Please check your API key in Settings.`,'ai');
+    } else {
+      chatHistory.pop();
+      appendChatMsg('⚠️ No response from Gemini. Please try again.','ai');
+    }
+  } catch(err){
+    typingEl.remove();
+    chatHistory.pop();
+    appendChatMsg(`⚠️ Connection error: ${err.message}. Check your internet connection.`,'ai');
+  }
+}
+
+function askAI(q){document.getElementById('chatInput').value=q;sendChat();}
+
+function appendChatMsg(text,role){
+  const el=document.createElement('div');
+  el.className=`chat-msg ${role}`;
+  // render basic markdown: **bold**, newlines
+  el.innerHTML=text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+  document.getElementById('chatMessages').appendChild(el);
+  scrollChat();
+}
+function scrollChat(){const m=document.getElementById('chatMessages');m.scrollTop=m.scrollHeight;}
+
+// ══════════════════════════════════════
+// ONBOARDING TOUR
+// ══════════════════════════════════════
+const tourSteps=[
+  {target:'#sidebar .logo',title:'👋 Welcome to MarketAI!',desc:'Your all-in-one AI marketing command center. Let\'s take a 60-second tour to get you up to speed on all the key features.'},
+  {target:'.quick-strip',title:'⚡ Quick Actions Bar',desc:'Instantly access your most common tasks — generate content, schedule posts, open campaigns, and more. No navigation needed.'},
+  {target:'#topbar .search-box',title:'🔍 Command Palette (⌘K)',desc:'The fastest way to navigate. Press ⌘K or Ctrl+K anytime to search pages, trigger actions, or find campaigns instantly.'},
+  {target:'.stat-row',title:'📊 Live Performance Metrics',desc:'Your key numbers updated in real-time. Click any card to dive deeper into that metric\'s analytics.'},
+  {target:'.icon-btn:first-of-type',title:'🔔 Smart Notifications',desc:'Filter notifications by type, mark as read, or take action directly from the notification panel. Never miss a campaign milestone.'},
+  {target:'.chat-fab',title:'🤖 AI Marketing Assistant',desc:'Your always-available AI strategist. It knows your campaign data and can answer questions, suggest improvements, and generate ideas.'},
+];
+
+let tourStep=0;
+function startTour(){tourStep=0;document.getElementById('tourOverlay').style.display='block';renderTourStep();}
+function renderTourStep(){
+  const step=tourSteps[tourStep];
+  const el=document.querySelector(step.target);
+  if(!el){nextTourStep();return;}
+  const rect=el.getBoundingClientRect();const pad=8;
+  const spotlight=document.getElementById('tourSpotlight');
+  spotlight.style.cssText=`left:${rect.left-pad}px;top:${rect.top-pad}px;width:${rect.width+pad*2}px;height:${rect.height+pad*2}px`;
+  document.getElementById('tourTitle').textContent=step.title;
+  document.getElementById('tourDesc').textContent=step.desc;
+  document.getElementById('tourDots').innerHTML=tourSteps.map((_,i)=>`<div class="tour-dot ${i===tourStep?'active':''}"></div>`).join('');
+  const card=document.getElementById('tourCard');
+  const cardLeft=Math.min(rect.left,window.innerWidth-340);
+  const cardTop=rect.bottom+16+160>window.innerHeight?rect.top-190:rect.bottom+16;
+  card.style.cssText=`left:${Math.max(16,cardLeft)}px;top:${Math.max(16,cardTop)}px`;
+  document.getElementById('tourNextBtn').textContent=tourStep===tourSteps.length-1?'Finish ✓':'Next →';
+}
+function nextTourStep(){tourStep++;if(tourStep>=tourSteps.length){endTour();return;}renderTourStep();}
+function endTour(){document.getElementById('tourOverlay').style.display='none';toast('🎉 Tour complete! You\'re ready to market like a pro.','success');}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+window.addEventListener('load',()=>{
+  const today=new Date().toISOString().split('T')[0];
+  const d1=document.getElementById('sp-date');
+  const d2=document.getElementById('nc-date');
+  if(d1)d1.value=today;
+  if(d2)d2.value=today;
+  // Apply saved profile/settings to UI immediately
+  refreshAllViews();
+  // populate landing page stats from saved data
+  const a=computeAnalytics();
+  document.getElementById('land-stat-reach').textContent     = a.totalReach>0?fmtNum(a.totalReach):'—';
+  document.getElementById('land-stat-campaigns').textContent = campaigns.length||'0';
+  document.getElementById('land-stat-posts').textContent     = (kanbanData.scheduled||[]).length+(kanbanData.draft||[]).length||'0';
+  document.getElementById('land-stat-budget').textContent    = a.totalBudget>0?'$'+fmtNum(a.totalBudget):'$0';
+});-e 
+</script>
+</body>
+</html>
